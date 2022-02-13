@@ -1,0 +1,20 @@
+<odoo>
+    <record id="module_modulo_matricula" model="ir.module.category">
+        <field name="name">Matriculación</field>
+    </record>
+    <record id="res_groups_administrador" model="res.groups">
+        <field name="name">Administrador</field>
+        <field name="category_id" ref="modulo_matriculas.module_modulo_matricula"/>
+        <field name="users" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+
+    <record id="res_groups_gestor" model="res.groups">
+        <field name="name">Gestor Academico</field>
+        <field name="category_id" ref="modulo_matriculas.module_modulo_matricula"/>
+    </record>
+
+    <record id="res_groups_alumnos" model="res.groups">
+        <field name="name">Alumnos</field>
+        <field name="category_id" ref="modulo_matriculas.module_modulo_matricula"/>
+    </record>
+</odoo>

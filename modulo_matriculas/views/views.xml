@@ -1,0 +1,652 @@
+<odoo>
+    <data>
+
+        <!--VISTAS ALUMNO-->
+        <!--VISTAS ALUMNO FORM-->
+        <!--Vista Form Matricula Alumno-->
+        <!--
+        <record id="view_form_matricula" model="ir.ui.view">
+            <field name="name">view.form.ma.matricula</field>
+            <field name="model">ma.matricula</field>
+            <field name="arch" type="xml">
+                <form  create="false">
+                    <sheet>
+                            <group>
+                                <field name="user_id" invisible="1"/>
+                                <field name="carrera_id" />
+                                <field name="tipo_matricula"/>
+                            </group>
+                            <group>
+                                <field name="ciclo_materias_reprobadas" domain="[('carrera_id', '=', carrera_id)]"/>
+                                <field name="paralelo_ciclo_reprobar" domain="[('ciclo_id', '=', ciclo_materias_reprobadas)]"/>
+                                <field name="asignaturas_reprobadas" domain="[('ciclo_id', '=', ciclo_materias_reprobadas)]"/>
+                            </group>
+                            <group>
+                            <field name="matricular_mismo_ciclo"/>
+                            </group>
+                            <group>
+                                <field name="ciclo_materias_matricular" domain="[('carrera_id', '=', carrera_id)]" attrs="{'invisible': ['|',('tipo_matricula', '=', 'tercera_matricula'),('matricular_mismo_ciclo', '=', True)]}"/>
+                                <field name="asignaturas_matricular" domain="[('ciclo_id', '=', ciclo_materias_matricular)]" attrs="{'invisible': ['|',('tipo_matricula', '=', 'tercera_matricula'),('matricular_mismo_ciclo', '=', True)]}"/>
+                            </group>
+                        <notebook>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        -->
+        <!--Vista Tree Periodo Matricula Alumno-->
+        <record id="view_tree_periodo_matricula_alumno" model="ir.ui.view">
+            <field name="name">view.tree.ma.periodomatricula</field>
+            <field name="model">ma.periodomatricula</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="fecha_inicio"/>
+                    <field name="fecha_fin"/>
+                    <field name="estado" invisible="1"/>
+                    <button
+                            string="Generar Solicitud Matricula"
+                            type="object"
+                            name="botonmatricularse"
+                            attrs="{'invisible':[('estado', '!=', True)]}"
+                            class="btn btn-primary"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--Vista Tree Asignatura Alumno-->
+        <record id="view_tree_asignatura" model="ir.ui.view">
+            <field name="name">view.tree.ma.asignatura</field>
+            <field name="model">ma.asignatura</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="creditos"/>
+                    <field name="carrera_id"/>
+                    <field name="ciclo_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--Vista Tree  Matricula Alumno-->
+<!--
+        <record id="view_tree_matricula_alumno" model="ir.ui.view">
+            <field name="name">view.tree.ma.matricula</field>
+            <field name="model">ma.matricula</field>
+            <field name="arch" type="xml">
+                <tree>
+
+                    <field name="carrera_id"/>
+                    <field name="tipo_matricula"/>
+                    <field name="ciclo_materias_matricular"/>
+                    <button
+                            string="Matricularse"
+                            type="object"
+                            name="proceso_matricularse"
+                            class="btn btn-primary"/>
+                </tree>
+            </field>
+        </record>
+
+-->
+        <!--VISTAS ADMINISTRADOR-->
+        <!--VISTAS ADMINISTRADOR FORM-->
+        <!--Vista Form Periodo Matrícula Gestor-->
+        <record id="view_form_periodo_matricula" model="ir.ui.view">
+            <field name="name">view.form.ma.periodomatricula</field>
+            <field name="model">ma.periodomatricula</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                            <group>
+                                <field name="name"/>
+                                <field name="fecha_inicio"/>
+                                <field name="fecha_fin"/>
+                                <field name="estado" readonly="1"/>
+                            </group>
+                        <notebook>
+                        </notebook>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+
+        <!--Vista Form Periodo Matrícula Gestor-->
+        <record id="view_form_ciclo" model="ir.ui.view">
+            <field name="name">view.form.ma.ciclo</field>
+            <field name="model">ma.ciclo</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                            <group>
+                                <field name="nombre_ciclo" invisible="1"/>
+                                <field name="nombre_ciclo"/>
+                                <field name="creditos"/>
+                                <field name="n_asignaturas"/>
+                                <field name="numero_ciclo"/>
+                                <field name="carrera_id"/>
+                                <field name="paralelo_ids"/>
+
+                            </group>
+                        <notebook>
+                        </notebook>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+        <!--Vista Form Paralelo-->
+        <record id="view_form_paralelo" model="ir.ui.view">
+            <field name="name">view.form.ma.paralelo</field>
+            <field name="model">ma.paralelo</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                            <group>
+                                <field name="name"/>
+                                <field name="carrera_id" string="Filtrar por Carrera" />
+                                <field name="ciclo_id" domain="[('carrera_id', '=', carrera_id)]"/>
+                            </group>
+                            <group>
+                                <notebook string="Horario">
+                                <page string="Lunes">
+                                <field name="horario_lunes" nolabel="1"/>
+                                </page>
+                                <page string="Martes">
+                                <field name="horario_martes" nolabel="1"/>
+                                </page>
+                                <page string="Miércoles">
+                                <field name="horario_miercoles" nolabel="1"/>
+                                </page>
+                                <page string="Jueves">
+                                <field name="horario_jueves" nolabel="1"/>
+                                </page>
+                                <page string="Viernes">
+                                <field name="horario_viernes" nolabel="1"/>
+                                </page>
+                                </notebook>
+                            </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!--Vista Form Horario-->
+        <record id="view_form_horario" model="ir.ui.view">
+            <field name="name">view.form.ma.horario</field>
+            <field name="model">ma.horario</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                            <group>
+                                    <field name="numero_hora"/>
+                                    <field name="carrera_id" string="Filtrar por Carrera"/>
+                                    <field name="ciclo_id" string="Filtrar por Ciclo" domain="[('carrera_id', '=', carrera_id)]"/>
+                                    <field name="asignatura_id" domain="[('ciclo_id', '=', ciclo_id)]"/>
+                                    <field name="paralelo_id1" invisible="1"/>
+                                    <field name="paralelo_id2" invisible="1"/>
+                                    <field name="paralelo_id3" invisible="1"/>
+                                    <field name="paralelo_id4" invisible="1"/>
+                                    <field name="paralelo_id5" invisible="1"/>
+                            </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!--Vista Form Usuarios Gestor-->
+        <record id="view_form_usuario" model="ir.ui.view">
+            <field name="name">view.form.res.users</field>
+            <field name="model">res.users</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                            <field name="name" required="1"/>
+                            </group>
+                            <group>
+                            <field name="image_1920" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;image_128&quot;}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="login" string="Correo Electrónico"/>
+                                <field name="email" invisible="1"/>
+                                <field name="function"/>
+                                <field name="vat" string="Cédula de Identidad"/>
+
+                                <field name="groups_id"/> <!-- domain="['|','|', ('id','=',31),('id','=',32),('id','=',33)]"-->
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!--Vista Form Asignatura Gestor-->
+        <record id="view_form_asignatura" model="ir.ui.view">
+            <field name="name">view.form.ma.asignatura</field>
+            <field name="model">ma.asignatura</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                            <group>
+                                <field name="name" />
+                                <field name="creditos"/>
+                            </group>
+                            <group>
+                                <field name="carrera_id"/>
+                                <field name="ciclo_id" domain="[('carrera_id', '=', carrera_id)]"/>
+                            </group>
+                            <group>
+                                <field name="prerrequisitos" domain="[('carrera_id', '=', carrera_id)]"/>
+                            </group>
+                        <notebook>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!--VISTAS ADMINISTRADOR TREE-->
+        <!--Vista Tree Periodo Matricula Gestor-->
+        <record id="view_tree_periodo_matricula" model="ir.ui.view">
+            <field name="name">view.tree.ma.periodomatricula</field>
+            <field name="model">ma.periodomatricula</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="fecha_inicio"/>
+                    <field name="fecha_fin"/>
+                    <field name="estado"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--Vista Tree Paralelo-->
+        <record id="view_tree_paralelo" model="ir.ui.view">
+            <field name="name">view.tree.ma.paralelo</field>
+            <field name="model">ma.paralelo</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="ciclo_id"/>
+                    <field name="carrera_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--Vista Tree Horario-->
+        <record id="view_tree_horario" model="ir.ui.view">
+            <field name="name">view.tree.ma.horario</field>
+            <field name="model">ma.horario</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="numero_hora"/>
+                    <field name="asignatura_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--Vista Tree Ciclo-->
+        <record id="view_tree_ciclo" model="ir.ui.view">
+            <field name="name">view.tree.ma.ciclo</field>
+            <field name="model">ma.ciclo</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="creditos"/>
+                    <field name="n_asignaturas"/>
+                    <field name="numero_ciclo"/>
+                    <field name="carrera_id"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <!--Vista Tree Usuario Gestor-->
+        <record id="view_tree_usuario" model="ir.ui.view">
+            <field name="name">view.tree.res.docente</field>
+            <field name="model">res.users</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="vat" string="Nro. Cédula"/>
+                    <field name="email"/>
+                    <field name="phone" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+
+
+        <!--act_window-->
+        <!--Accion de ventana Usuario-->
+        <record id="action_view_usuario" model="ir.actions.act_window">
+            <field name="name">Usuarios</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.users</field>
+            <field name="view_mode">kanban,tree,form,graph</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Crear un Usuario en el módulo Matriculación
+                </p>
+            </field>
+        </record>
+
+        <!--act_window.view-->
+        <!--Accion de ventana Form Usuario-->
+        <record id="action_view_usuario_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="modulo_matriculas.view_form_usuario"/>
+            <field name="act_window_id" ref="action_view_usuario"/>
+        </record>
+
+        <!--Accion de ventana Tree Usuario-->
+        <record id="action_view_usuario_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="modulo_matriculas.view_tree_usuario"/>
+            <field name="act_window_id" ref="action_view_usuario"/>
+        </record>
+
+        <!--Accion de ventana Carrera-->
+        <record id="action_view_carrera" model="ir.actions.act_window">
+            <field name="name">Carreras</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ma.carrera</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <!--<field name="search_view_id" ref="da_silabo.view_docente_search_valoracion"/>-->
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Crear una Carrera en el módulo de Matriculas
+                </p>
+            </field>
+        </record>
+
+        <!--Accion de ventana Asignatura-->
+        <record id="action_view_asignatura" model="ir.actions.act_window">
+            <field name="name">Asignaturas</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ma.asignatura</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <!--<field name="search_view_id" ref="da_silabo.view_docente_search_valoracion"/>-->
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Crear una Asignatura en el módulo de Matriculas
+                </p>
+            </field>
+        </record>
+
+        <!--Accion de ventana Form Asignatura-->
+        <record id="action_view_asignatura_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="modulo_matriculas.view_form_asignatura"/>
+            <field name="act_window_id" ref="action_view_asignatura"/>
+        </record>
+
+        <!--Accion de ventana Tree Asignatura-->
+        <record id="action_view_asignatura_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="modulo_matriculas.view_tree_asignatura"/>
+            <field name="act_window_id" ref="action_view_asignatura"/>
+        </record>
+
+
+        <!--Accion de ventana Ciclo-->
+        <record id="action_view_ciclo" model="ir.actions.act_window">
+            <field name="name">Ciclos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ma.ciclo</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <!--<field name="search_view_id" ref="da_silabo.view_docente_search_valoracion"/>-->
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Crear una Ciclo en el módulo de Matriculas
+                </p>
+            </field>
+        </record>
+
+        <!--Accion de ventana Form CIclo-->
+        <record id="action_view_ciclo_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="modulo_matriculas.view_form_ciclo"/>
+            <field name="act_window_id" ref="action_view_ciclo"/>
+        </record>
+
+        <!--Accion de ventana Form Tree-->
+        <record id="action_view_ciclo_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="modulo_matriculas.view_tree_ciclo"/>
+            <field name="act_window_id" ref="action_view_ciclo"/>
+        </record>
+
+        <!--Accion de ventana Paralelo-->
+        <record id="action_view_paralelo" model="ir.actions.act_window">
+            <field name="name">Paralelos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ma.paralelo</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <!--<field name="search_view_id" ref="da_silabo.view_docente_search_valoracion"/>-->
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Crear paralelos para Asignar a sus Ciclos
+                </p>
+            </field>
+        </record>
+
+        <!--Accion de ventana Form Paralelo-->
+        <record id="action_view_paralelo_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="modulo_matriculas.view_form_paralelo"/>
+            <field name="act_window_id" ref="action_view_paralelo"/>
+        </record>
+
+        <!--Accion de ventana Tree Paralelo-->
+        <record id="action_view_paralelo_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="modulo_matriculas.view_tree_paralelo"/>
+            <field name="act_window_id" ref="action_view_paralelo"/>
+        </record>
+
+        <!--Accion de ventana Horario-->
+        <record id="action_view_horario" model="ir.actions.act_window">
+            <field name="name">Horario</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ma.horario</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <!--<field name="search_view_id" ref="da_silabo.view_docente_search_valoracion"/>-->
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Crear Horario para Asignar a sus Paralelos
+                </p>
+            </field>
+        </record>
+
+        <!--Accion de ventana Form Paralelo-->
+        <record id="action_view_horario_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="modulo_matriculas.view_form_horario"/>
+            <field name="act_window_id" ref="action_view_horario"/>
+        </record>
+
+        <!--Accion de ventana Tree Paralelo-->
+        <record id="action_view_horario_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="modulo_matriculas.view_tree_horario"/>
+            <field name="act_window_id" ref="action_view_horario"/>
+        </record>
+
+        <!--Accion de ventana Periodo Matrícula-->
+        <record id="action_view_periodo_matricula" model="ir.actions.act_window">
+            <field name="name">Periodo Matrículas</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ma.periodomatricula</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <!--<field name="search_view_id" ref="da_silabo.view_docente_search_valoracion"/>-->
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Crear un Periodo de Matrículas en el módulo de Matriculas
+                </p>
+            </field>
+        </record>
+
+        <!--Accion de ventana Periodo Matrícula-->
+        <record id="action_view_matricula_alumno" model="ir.actions.act_window">
+            <field name="name">Matrículas</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ma.matricula</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('user_id','=', uid)]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Generar Solicitudes de Matriculas
+                </p>
+            </field>
+        </record>
+
+
+        <!--Accion de ventana Tree Asignatura-->
+        <record id="action_view_matricula_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+
+            <!--comentario new<field name="view_id" ref="modulo_matriculas.view_tree_matricula_alumno"/>-->
+            <field name="act_window_id" ref="action_view_matricula_alumno"/>
+        </record>
+
+        <!--Accion de ventana Matrícula Form-->
+        <record id="action_view_matricula" model="ir.actions.act_window">
+            <field name="name">Matrícular</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ma.matricula</field>
+            <field name="view_mode">form</field>
+        </record>
+
+        <!--Accion de ventana asignatura tree-->
+        <record id="action_view_periodo_matricula_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="modulo_matriculas.view_tree_periodo_matricula"/>
+            <field name="act_window_id" ref="action_view_periodo_matricula"/>
+        </record>
+
+        <!--Accion de ventana periodo matriculaf orm-->
+        <record id="action_view_periodo_matricula_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="modulo_matriculas.view_form_periodo_matricula"/>
+            <field name="act_window_id" ref="action_view_periodo_matricula"/>
+        </record>
+
+        <!--Accion de ventana Periodo Matrícula Alumno-->
+        <record id="action_view_periodo_matricula_alumno" model="ir.actions.act_window">
+            <field name="name">Matrículas</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ma.periodomatricula</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No existe Periodo de Matrículas en el módulo
+                </p>
+            </field>
+        </record>
+
+        <!--Accion de ventana Tree Asignatura Alumno-->
+        <record id="action_view_periodo_matricula_tree_alumno" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="modulo_matriculas.view_tree_periodo_matricula_alumno"/>
+            <field name="act_window_id" ref="action_view_periodo_matricula_alumno"/>
+        </record>
+
+        <!--MENÚ-->
+        <menuitem id="menu_main_matricula_app_A"
+                   name="Matrículas"
+                   groups = "modulo_matriculas.res_groups_administrador"
+                   action="modulo_matriculas.action_view_carrera"/>
+
+        <menuitem id="menu_main_matricula_app_Alumno"
+                   name="Matrículas"
+                   groups = "modulo_matriculas.res_groups_alumnos"
+                   action="modulo_matriculas.action_view_matricula_alumno"/>
+
+        <menuitem id="menu_datos_datos_carrera"
+                  name="Datos Carrera"
+                  groups = "modulo_matriculas.res_groups_administrador"
+                  parent="modulo_matriculas.menu_main_matricula_app_A"/>
+
+        <menuitem id="menu_usuarios"
+                  name="Usuarios"
+                  groups = "modulo_matriculas.res_groups_administrador"
+                  parent="modulo_matriculas.menu_main_matricula_app_A"
+                  action="modulo_matriculas.action_view_usuario"/>
+
+        <menuitem id="menu_main_carrera"
+                  name="Carreras"
+                  groups = "modulo_matriculas.res_groups_administrador"
+                  parent="modulo_matriculas.menu_datos_datos_carrera"
+                  action="modulo_matriculas.action_view_carrera"/>
+
+        <menuitem id="menu_main_asignatura"
+                  name="Asignaturas"
+                  groups = "modulo_matriculas.res_groups_administrador"
+                  parent="modulo_matriculas.menu_datos_datos_carrera"
+                  action="modulo_matriculas.action_view_asignatura"/>
+
+        <menuitem id="menu_main_ciclo"
+                  name="Ciclos"
+                  groups = "modulo_matriculas.res_groups_administrador"
+                  parent="modulo_matriculas.menu_datos_datos_carrera"
+                  action="modulo_matriculas.action_view_ciclo"/>
+
+        <menuitem id="menu_main_paralelo"
+                  name="Paralelos/Horarios"
+                  groups = "modulo_matriculas.res_groups_administrador"
+                  parent="modulo_matriculas.menu_datos_datos_carrera"
+                  action="modulo_matriculas.action_view_paralelo"/>
+
+        <menuitem id="menu_datos_periodo_matricula"
+                  name="Periodo Matrículas"
+                  groups = "modulo_matriculas.res_groups_administrador"
+                  parent="modulo_matriculas.menu_main_matricula_app_A"/>
+
+        <menuitem id="menu_main_periodo"
+                  name="Periodos"
+                  groups = "modulo_matriculas.res_groups_administrador"
+                  parent="modulo_matriculas.menu_datos_periodo_matricula"
+                  action="modulo_matriculas.action_view_periodo_matricula"/>
+
+
+
+
+        <menuitem id="menu_solicitudes_alumnos"
+                  name="Matrícular"
+                  groups ="modulo_matriculas.res_groups_alumnos"
+                  parent="modulo_matriculas.menu_main_matricula_app_Alumno"/>
+
+        <menuitem id="menu_matriculas_alumnos"
+                  name="Generar Matrícula"
+                  sequence = "2"
+                  groups ="modulo_matriculas.res_groups_alumnos"
+                  parent="modulo_matriculas.menu_solicitudes_alumnos"
+                  action="modulo_matriculas.action_view_matricula_alumno"/>
+
+
+    </data>
+</odoo>

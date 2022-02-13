@@ -1,0 +1,174 @@
+<odoo>
+    <!--Accesos para el modelo Res.Users-->
+    <record id="model_access_res_user_Admin" model="ir.model.access">
+        <field name="name">model.access.res.user</field>
+        <field name="model_id" ref="base.model_res_users"/>
+        <field name="group_id" ref="modulo_matriculas.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!--Accesos para el modelo Ciclo-->
+    <record id="model_access_administrador_ciclo" model="ir.model.access">
+        <field name="name">model.access.ma.ciclo</field>
+        <field name="model_id" ref="modulo_matriculas.model_ma_ciclo"/>
+        <field name="group_id" ref="modulo_matriculas.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!--Accesos para el modelo Ciclo Alumnnio-->
+    <record id="model_access_administrador_ciclo_alumno" model="ir.model.access">
+        <field name="name">model.access.ma.ciclo.alumno</field>
+        <field name="model_id" ref="modulo_matriculas.model_ma_ciclo"/>
+        <field name="group_id" ref="modulo_matriculas.res_groups_alumnos"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+
+
+    <!--Accesos para el modelo Asignatura Admin -->
+    <record id="model_access_administrador_asignatura" model="ir.model.access">
+        <field name="name">model.access.ma.asignatura</field>
+        <field name="model_id" ref="modulo_matriculas.model_ma_asignatura"/>
+        <field name="group_id" ref="modulo_matriculas.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!--Accesos para el modelo Paralelo Admin -->
+    <record id="model_access_administrador_paralelo" model="ir.model.access">
+        <field name="name">model.access.ma.paralelo</field>
+        <field name="model_id" ref="modulo_matriculas.model_ma_paralelo"/>
+        <field name="group_id" ref="modulo_matriculas.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!--Accesos para el modelo Paralelo Alumno -->
+    <record id="model_access_alumno_paralelo" model="ir.model.access">
+        <field name="name">model.access.ma.paralelo.alumno</field>
+        <field name="model_id" ref="modulo_matriculas.model_ma_paralelo"/>
+        <field name="group_id" ref="modulo_matriculas.res_groups_alumnos"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+
+    <!--Accesos para el modelo Horario Admin -->
+    <record id="model_access_administrador_horario" model="ir.model.access">
+        <field name="name">model.access.ma.horario</field>
+        <field name="model_id" ref="modulo_matriculas.model_ma_horario"/>
+        <field name="group_id" ref="modulo_matriculas.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!--Accesos para el modelo Horario Alumnos -->
+    <record id="model_access_alumnos_horario" model="ir.model.access">
+        <field name="name">model.access.ma.horario.alumno</field>
+        <field name="model_id" ref="modulo_matriculas.model_ma_horario"/>
+        <field name="group_id" ref="modulo_matriculas.res_groups_alumnos"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!--Accesos para el modelo Asignatura Alumno-->
+    <record id="model_access_administrador_asignatura_alumno" model="ir.model.access">
+        <field name="name">model.access.ma.asignatura.alumno</field>
+        <field name="model_id" ref="modulo_matriculas.model_ma_asignatura"/>
+        <field name="group_id" ref="modulo_matriculas.res_groups_alumnos"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!--Accesos para el modelo Carrera-->
+    <record id="model_access_administrador_carrera" model="ir.model.access">
+        <field name="name">model.access.ma.carrera</field>
+        <field name="model_id" ref="modulo_matriculas.model_ma_carrera"/>
+        <field name="group_id" ref="modulo_matriculas.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!--Accesos para el modelo Carrera Alumno-->
+    <record id="model_access_administrador_carrera_alumno" model="ir.model.access">
+        <field name="name">model.access.ma.carrera.alumno</field>
+        <field name="model_id" ref="modulo_matriculas.model_ma_carrera"/>
+        <field name="group_id" ref="modulo_matriculas.res_groups_alumnos"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+
+
+    <!--Accesos para el periodo matricula admin-->
+    <record id="model_access_administrador_periodomatricula" model="ir.model.access">
+        <field name="name">model.access.ma.periodomatricula</field>
+        <field name="model_id" ref="modulo_matriculas.model_ma_periodomatricula"/>
+        <field name="group_id" ref="modulo_matriculas.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+
+    <!--Accesos para el periodo matricula administradoir-->
+    <record id="model_access_administrador_matricula" model="ir.model.access">
+        <field name="name">model.access.ma.matricula</field>
+        <field name="model_id" ref="modulo_matriculas.model_ma_matricula"/>
+        <field name="group_id" ref="modulo_matriculas.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!--Accesos para el periodo matricula alumno-->
+    <record id="model_access_administrador_matricula_alumno" model="ir.model.access">
+        <field name="name">model.access.ma.matricula</field>
+        <field name="model_id" ref="modulo_matriculas.model_ma_matricula"/>
+        <field name="group_id" ref="modulo_matriculas.res_groups_alumnos"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!--Accesos para el periodo matricula-->
+    <record id="model_access_administrador_periodomatricula_alumno" model="ir.model.access">
+        <field name="name">model.access.ma.periodomatricula.alumno</field>
+        <field name="model_id" ref="modulo_matriculas.model_ma_periodomatricula"/>
+        <field name="group_id" ref="modulo_matriculas.res_groups_alumnos"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+</odoo>
+

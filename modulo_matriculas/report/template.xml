@@ -1,0 +1,156 @@
+<odoo>
+    <template id="modulo_matriculas.report_solicitud_matricula">
+        <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="obj">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div style="font-family: 'Open Sans', sans-serif; font-size: 16pt;
+                                color: #000000">
+
+                                <p class="text-right">Loja, <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d de %B del %Y')"/></p>
+                                <t t-foreach="request.env['res.users'].search([])" t-as="doc1">
+                                    <t t-if="doc1.has_group('modulo_matriculas.res_groups_decano')">
+                                        <p align="left"><b>Ing. <span t-esc="doc1.name"></span></b></p>
+                                        <p align="left"><b><span t-esc="doc1.function"></span></b></p>
+                                    </t>
+                                </t>
+
+                                <hr></hr>
+
+                                <p>De mis consideraciones:</p>
+                                <br/>
+
+                                <t t-if="obj.tipo_matricula == 'segunda_matricula' and obj.matricular_mismo_ciclo == False">
+                                    <p class="text-justify">Yo, <b><span t-field="obj.user_id.name"/></b>, con C.I: <b><span t-field="obj.user_id.vat"/></b> me dirijo a usted de la forma más cordial
+                                    para solicitar <b><span t-field="obj.tipo_matricula"/></b> a las asignaturas: <b><t t-foreach="obj.asignaturas_reprobadas" t-as="asignatura"> <span t-field="asignatura.name"/>, </t></b>
+                                    correspondiente al ciclo <b><span t-field="obj.ciclo_materias_reprobadas.numero_ciclo"/></b>, además solicito <b>Primera Matrícula</b> al ciclo <b><span t-field="obj.ciclo_materias_matricular.numero_ciclo"/></b> en las asignaturas:
+                                    <b><t t-foreach="obj.asignaturas_matricular" t-as="asignatura"> <span t-field="asignatura.name"/>, </t></b> en el periodo <b><span t-field="obj.periodo_id.name"/></b>.</p>
+                                    <br/>
+                                    <p class="text-justify">Agradezco por la atención dada a la presente, deseando éxitos en sus labores cotidianas.</p>
+
+                                    <p class="text-center" ><br/><br/><br/><br/><br/>
+                                        f)________________________<br/>
+                                        <span t-field="obj.user_id.name"/><br/>
+                                        <span t-field="obj.user_id.function"/><br/>
+                                        C.I:<span t-field="obj.user_id.vat"/>
+                                        </p>
+                                </t>
+
+                                <t t-if="obj.tipo_matricula == 'segunda_matricula' and obj.matricular_mismo_ciclo == True">
+                                    <p class="text-justify">Yo, <b><span t-field="obj.user_id.name"/></b>, con C.I: <b><span t-field="obj.user_id.vat"/></b> me dirijo a usted de la forma más cordial
+                                    para solicitar <b><span t-field="obj.tipo_matricula"/></b> a las asignaturas: <b><t t-foreach="obj.asignaturas_reprobadas" t-as="asignatura"> <span t-field="asignatura.name"/>, </t></b>
+                                    correspondiente al ciclo <b><span t-field="obj.ciclo_materias_reprobadas.numero_ciclo"/></b>, en el periodo <b><span t-field="obj.periodo_id.name"/></b>.</p>
+                                    <br/>
+                                    <p class="text-justify">Agradezco por la atención dada a la presente, deseando éxitos en sus labores cotidianas.</p>
+
+                                    <p class="text-center" ><br/><br/><br/><br/><br/>
+                                        f)________________________<br/>
+                                        <span t-field="obj.user_id.name"/><br/>
+                                        <span t-field="obj.user_id.function"/><br/>
+                                        C.I:<span t-field="obj.user_id.vat"/>
+                                        </p>
+                                </t>
+
+                                <t t-if="obj.tipo_matricula == 'tercera_matricula'">
+                                    <p class="text-justify">Yo, <b><span t-field="obj.user_id.name"/></b>, con C.I: <b><span t-field="obj.user_id.vat"/></b> me dirijo a usted de la forma más cordial
+                                    para solicitar <b><span t-field="obj.tipo_matricula"/></b> a las asignaturas: <b><t t-foreach="obj.asignaturas_reprobadas" t-as="asignatura"> <span t-field="asignatura.name"/>, </t></b>
+                                    correspondiente al ciclo <b><span t-field="obj.ciclo_materias_reprobadas.numero_ciclo"/></b>, en el periodo <b><span t-field="obj.periodo_id.name"/></b>.</p>
+                                    <br/>
+                                    <p class="text-justify">Agradezco por la atención dada a la presente, deseando éxitos en sus labores cotidianas.</p>
+
+                                    <p class="text-center" ><br/><br/><br/><br/><br/>
+                                        f)________________________<br/>
+                                        <span t-field="obj.user_id.name"/><br/>
+                                        <span t-field="obj.user_id.function"/><br/>
+                                        C.I:<span t-field="obj.user_id.vat"/>
+                                        </p>
+                                </t>
+
+
+                                <br/>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+    </template>
+
+    <template id="modulo_matriculas.report_solicitud_valores_pendientes">
+        <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="obj">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div style="font-family: 'Open Sans', sans-serif; font-size: 16pt;
+                                color: #000000">
+
+                                <p class="text-right">Loja, <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d de %B del %Y')"/></p>
+                                <t t-foreach="request.env['res.users'].search([])" t-as="doc1">
+                                    <t t-if="doc1.has_group('modulo_matriculas.res_groups_decano')">
+                                        <p align="left"><b>Ing. <span t-esc="doc1.name"></span></b></p>
+                                        <p align="left"><b><span t-esc="doc1.function"></span></b></p>
+                                    </t>
+                                </t>
+
+                                <hr></hr>
+
+                                <p>De mis consideraciones:</p>
+                                <br/>
+
+
+                                <t t-if="obj.tipo_matricula == 'segunda_matricula'">
+                                    <p class="text-justify">Yo, <b><span t-field="obj.user_id.name"/></b>, con C.I: <b><span t-field="obj.user_id.vat"/></b>, en razón de haber perdido el
+                                        derecho a la gratuidad de la educación superior, ante su autoridad me dirijo y
+                                        comedidamente le solicito: se designe diisponer a quien corresponda se realice el
+                                        cálculo del valor que debo cancelar por concepto de <b><span t-field="obj.tipo_matricula"/></b> en las asignaturas de: <b><t t-foreach="obj.asignaturas_reprobadas" t-as="asignatura"> <span t-field="asignatura.name"/>, </t></b>
+                                        correspondiente al ciclo <b><span t-field="obj.ciclo_materias_reprobadas.numero_ciclo"/></b>, con la finalidad de dar
+                                        cumplimiento a la RESOLUCIÓN Nro. 008-R-UNL-2019, requisito necesario para el
+                                        desarrollo de mis actividades académicas.</p>
+                                        <br/>
+                                        <p class="text-justify">
+                                        Adjunto Certificación socioeconómica conferida por la Dirección de Bienestar
+                                            Estudiantil.</p>
+                                    <br/>
+
+                                    <br/>
+                                    <p class="text-justify">Agradezco por la atención dada a la presente, deseando éxitos en sus labores cotidianas.</p>
+
+                                    <p class="text-center" ><br/><br/><br/><br/><br/>
+                                        f)________________________<br/>
+                                        <span t-field="obj.user_id.name"/><br/>
+                                        <span t-field="obj.user_id.function"/><br/>
+                                        C.I:<span t-field="obj.user_id.vat"/>
+                                        </p>
+                                </t>
+                                <t t-if="obj.tipo_matricula == 'tercera_matricula'">
+                                    <p class="text-justify">Yo, <b><span t-field="obj.user_id.name"/></b>, con C.I: <b><span t-field="obj.user_id.vat"/></b>, en razón de haber perdido el
+                                        derecho a la gratuidad de la educación superior, ante su autoridad me dirijo y
+                                        comedidamente le solicito: se designe diisponer a quien corresponda se realice el
+                                        cálculo del valor que debo cancelar por concepto de <b><span t-field="obj.tipo_matricula"/></b> en las asignaturas de: <b><t t-foreach="obj.asignaturas_reprobadas" t-as="asignatura"> <span t-field="asignatura.name"/>, </t></b>
+                                        correspondiente al ciclo <b><span t-field="obj.ciclo_materias_reprobadas.numero_ciclo"/></b>, con la finalidad de dar
+                                        cumplimiento a la RESOLUCIÓN Nro. 008-R-UNL-2019, requisito necesario para el
+                                        desarrollo de mis actividades académicas.</p>
+                                        <br/>
+                                        <p class="text-justify">
+                                        Adjunto Certificación socioeconómica conferida por la Dirección de Bienestar
+                                            Estudiantil.</p>
+
+
+                                    <br/>
+                                    <p class="text-justify">Agradezco por la atención dada a la presente, deseando éxitos en sus labores cotidianas.</p>
+
+                                    <p class="text-center" ><br/><br/><br/><br/><br/>
+                                        f)________________________<br/>
+                                        <span t-field="obj.user_id.name"/><br/>
+                                        <span t-field="obj.user_id.function"/><br/>
+                                        C.I:<span t-field="obj.user_id.vat"/>
+                                        </p>
+                                </t>
+
+                                <br/>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+    </template>
+</odoo>
