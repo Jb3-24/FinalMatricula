@@ -34,8 +34,49 @@
                 </form>
             </field>
         </record>
-
         -->
+<!--
+        <record id="view_form_matricula" model="ir.ui.view">
+            <field name="name">view.form.ma.matricula</field>
+            <field name="model">ma.matricula</field>
+            <field name="arch" type="xml">
+                <form  create="false">
+                    <sheet>
+                            <group>
+                                <field name ="nombre_alumno"/>
+                                <field name ="cedula_alumno"/>
+                                <field name="carrera_id" />
+                            </group>
+
+                            <group>
+                                <field name ="tercera_matricula"/>
+                            </group>
+
+                            <group>
+                                <field name ="ciclo_materias_reprobadas_tercera" domain="[('carrera_id', '=', carrera_id)]"/>
+                                <field name="asignaturas_reprobadas_tercera" domain="[('ciclo_id', '=', ciclo_materias_reprobadas_tercera)]"/>
+                            </group>
+
+                            <group>
+                                <field name="ciclo_materias_reprobadas" domain="[('carrera_id', '=', carrera_id)]"/>
+                                <field name="paralelo_ciclo_reprobar" domain="[('ciclo_id', '=', ciclo_materias_reprobadas)]"/>
+                                <field name="asignaturas_reprobadas" domain="[('ciclo_id', '=', ciclo_materias_reprobadas)]"/>
+                            </group>
+
+                            <group>
+                                <field name ="ciclo_materias_reprobadas_tercera" domain="[('carrera_id', '=', carrera_id)]"/>
+                                <field name="asignaturas_reprobadas_tercera" domain="[('ciclo_id', '=', ciclo_materias_reprobadas_tercera)]"/>
+                            </group>
+
+                            <group>
+                                <field name ="ciclo_materias_matricular" domain="[('carrera_id', '=', carrera_id)]"/>
+                                <field name="asignaturas_matricular" domain="[('ciclo_id', '=', ciclo_materias_matricular)]"/>
+                            </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+-->
         <!--Vista Tree Periodo Matricula Alumno-->
         <record id="view_tree_periodo_matricula_alumno" model="ir.ui.view">
             <field name="name">view.tree.ma.periodomatricula</field>
@@ -70,27 +111,6 @@
             </field>
         </record>
 
-        <!--Vista Tree  Matricula Alumno-->
-<!--
-        <record id="view_tree_matricula_alumno" model="ir.ui.view">
-            <field name="name">view.tree.ma.matricula</field>
-            <field name="model">ma.matricula</field>
-            <field name="arch" type="xml">
-                <tree>
-
-                    <field name="carrera_id"/>
-                    <field name="tipo_matricula"/>
-                    <field name="ciclo_materias_matricular"/>
-                    <button
-                            string="Matricularse"
-                            type="object"
-                            name="proceso_matricularse"
-                            class="btn btn-primary"/>
-                </tree>
-            </field>
-        </record>
-
--->
         <!--VISTAS ADMINISTRADOR-->
         <!--VISTAS ADMINISTRADOR FORM-->
         <!--Vista Form Periodo Matrícula Gestor-->
@@ -104,7 +124,6 @@
                                 <field name="name"/>
                                 <field name="fecha_inicio"/>
                                 <field name="fecha_fin"/>
-                                <field name="estado" readonly="1"/>
                             </group>
                         <notebook>
                         </notebook>
@@ -416,7 +435,7 @@
             </field>
         </record>
 
-        <!--Accion de ventana Form CIclo-->
+        <!--Accion de ventana Form Ciclo-->
         <record id="action_view_ciclo_form" model="ir.actions.act_window.view">
             <field name="sequence" eval="3"/>
             <field name="view_mode">form</field>
@@ -424,7 +443,7 @@
             <field name="act_window_id" ref="action_view_ciclo"/>
         </record>
 
-        <!--Accion de ventana Form Tree-->
+        <!--Accion de ventana Tree Ciclo-->
         <record id="action_view_ciclo_tree" model="ir.actions.act_window.view">
             <field name="sequence" eval="2"/>
             <field name="view_mode">tree</field>
@@ -476,7 +495,7 @@
             </field>
         </record>
 
-        <!--Accion de ventana Form Paralelo-->
+        <!--Accion de ventana Form Horario-->
         <record id="action_view_horario_form" model="ir.actions.act_window.view">
             <field name="sequence" eval="2"/>
             <field name="view_mode">form</field>
@@ -484,7 +503,7 @@
             <field name="act_window_id" ref="action_view_horario"/>
         </record>
 
-        <!--Accion de ventana Tree Paralelo-->
+        <!--Accion de ventana Tree Horario-->
         <record id="action_view_horario_tree" model="ir.actions.act_window.view">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
@@ -520,13 +539,10 @@
             </field>
         </record>
 
-
         <!--Accion de ventana Tree Asignatura-->
         <record id="action_view_matricula_tree" model="ir.actions.act_window.view">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
-
-            <!--comentario new<field name="view_id" ref="modulo_matriculas.view_tree_matricula_alumno"/>-->
             <field name="act_window_id" ref="action_view_matricula_alumno"/>
         </record>
 
@@ -538,7 +554,7 @@
             <field name="view_mode">form</field>
         </record>
 
-        <!--Accion de ventana asignatura tree-->
+        <!--Accion de ventana Asignatura tree-->
         <record id="action_view_periodo_matricula_tree" model="ir.actions.act_window.view">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
@@ -546,7 +562,7 @@
             <field name="act_window_id" ref="action_view_periodo_matricula"/>
         </record>
 
-        <!--Accion de ventana periodo matriculaf orm-->
+        <!--Accion de ventana Periodo Matricula form-->
         <record id="action_view_periodo_matricula_form" model="ir.actions.act_window.view">
             <field name="sequence" eval="2"/>
             <field name="view_mode">form</field>
@@ -591,12 +607,6 @@
                   groups = "modulo_matriculas.res_groups_administrador"
                   parent="modulo_matriculas.menu_main_matricula_app_A"/>
 
-        <menuitem id="menu_usuarios"
-                  name="Usuarios"
-                  groups = "modulo_matriculas.res_groups_administrador"
-                  parent="modulo_matriculas.menu_main_matricula_app_A"
-                  action="modulo_matriculas.action_view_usuario"/>
-
         <menuitem id="menu_main_carrera"
                   name="Carreras"
                   groups = "modulo_matriculas.res_groups_administrador"
@@ -631,22 +641,5 @@
                   groups = "modulo_matriculas.res_groups_administrador"
                   parent="modulo_matriculas.menu_datos_periodo_matricula"
                   action="modulo_matriculas.action_view_periodo_matricula"/>
-
-
-
-
-        <menuitem id="menu_solicitudes_alumnos"
-                  name="Matrícular"
-                  groups ="modulo_matriculas.res_groups_alumnos"
-                  parent="modulo_matriculas.menu_main_matricula_app_Alumno"/>
-
-        <menuitem id="menu_matriculas_alumnos"
-                  name="Generar Matrícula"
-                  sequence = "2"
-                  groups ="modulo_matriculas.res_groups_alumnos"
-                  parent="modulo_matriculas.menu_solicitudes_alumnos"
-                  action="modulo_matriculas.action_view_matricula_alumno"/>
-
-
     </data>
 </odoo>

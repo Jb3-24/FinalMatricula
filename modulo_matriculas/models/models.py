@@ -1,5 +1,4 @@
 import datetime
-
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
 
@@ -15,7 +14,6 @@ class Matricula(models.Model):
     _description = "Matricula"
 
     name = string = "Matriculas"
-
     nombre_alumno = fields.Char(string="Nombre", required=True, default="[Nombre alumno]")
     cedula_alumno = fields.Char(string="Cédula", required=True, default="[Número de cédula]")
 
@@ -28,20 +26,18 @@ class Matricula(models.Model):
         "ma.carrera", string="Carrera",
         default=lambda self: self.env['ma.carrera'].search([], limit=1),
         ondelete="cascade")
-    #datos primera matricula
 
-    ciclo_materias_pendientes = fields.Many2one("ma.ciclo", string="Ciclo en el cual tiene materias pendientes")
-
-    asignaturas_pendientes = fields.Many2many(
+    
+    # tercera matricula datos
+    tercera_matricula = fields.Boolean(string="Matricularse en tercera matrícula?", default=False)
+    ciclo_materias_reprobadas_tercera = fields.Many2one("ma.ciclo", string="Ciclo en el cual reprobó la materia en tercera matricula")
+    asignaturas_reprobadas_tercera = fields.Many2many(
         'ma.asignatura', 'ma_asignaturarep_rel',
-        'asignatura_id', 'ciclo_id', string='Asignaturas Pendientes'
+        'asignatura_id', 'ciclo_id', string='Asignaturas Reprobadas por Tercera matricula'
     )
 
-
     #segunda matricula datos
-
     ciclo_materias_reprobadas = fields.Many2one("ma.ciclo", string="Ciclo en el cual reprobó asignaturas")
-
     # Campo para Paralelo y validaciones
     paralelo_ciclo_reprobar = fields.Many2one("ma.paralelo", string="Paralelo del Ciclo en el cual reprobó asignaturas")
 
@@ -50,23 +46,17 @@ class Matricula(models.Model):
         'asignatura_id', 'ciclo_id', string='Asignaturas Reprobadas por Segunda Matricula'
     )
 
-    # tercera matricula datos
-
-    tercera_matricula = fields.Boolean(string="Matricularse en tercera matrícula?", default=False)
-
-    ciclo_materias_reprobadas_tercera = fields.Many2one("ma.ciclo", string="Ciclo en el cual reprobó la materia en tercera matricula")
-
-    asignaturas_reprobadas_tercera = fields.Many2many(
+    #datos primera matricula
+    ciclo_materias_pendientes = fields.Many2one("ma.ciclo", string="Ciclo en el cual tiene materias pendientes")
+    asignaturas_pendientes = fields.Many2many(
         'ma.asignatura', 'ma_asignaturarep_rel',
-        'asignatura_id', 'ciclo_id', string='Asignaturas Reprobadas por Tercera matricula'
+        'asignatura_id', 'ciclo_id', string='Asignaturas Pendientes'
     )
 
-    asignaturas_maticular_ids = fields.One2many("ma.asignatura", "matricula_id",
-                                   string="Materias matricular")
-
+    #Campo para ciclo a matrícular
     ciclo_materias_matricular = fields.Many2one("ma.ciclo", string="Ciclo en el cual se va a matricular")
-
-
+    #Campo para guardar la respuesta luego de aplicar las normas de la U
+    asignaturas_maticular_ids = fields.One2many("ma.asignatura", "matricula_id", string="Materias matricular")
 
     @api.onchange('asignaturas_reprobadas')
     def _modificarCiclos(self):
@@ -75,7 +65,7 @@ class Matricula(models.Model):
         ciclo_reprobado = self.ciclo_materias_reprobadas
         numero_asignaturas = ciclo_reprobado.n_asignaturas
         n_materias_matricular = round(numero_asignaturas * 0.40)
-        tipo_matri = self.tipo_matricula
+        tipo_matri = "Tipo Matrícula"
         for record in self.asignaturas_reprobadas:
             contador = contador + 1
         if contador > 1 and tipo_matri == "tercera_matricula":
