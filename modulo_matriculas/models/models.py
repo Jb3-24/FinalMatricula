@@ -1,4 +1,5 @@
 import datetime
+import re
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
 
@@ -32,33 +33,102 @@ class Matricula(models.Model):
     tercera_matricula = fields.Boolean(string="Matricularse en tercera matrícula?", default=False)
     ciclo_materias_reprobadas_tercera = fields.Many2one("ma.ciclo", string="Ciclo en el cual reprobó la materia en tercera matricula")
     asignaturas_reprobadas_tercera = fields.Many2many(
-        'ma.asignatura', 'ma_asignaturarep_rel',
+        'ma.asignatura', 'ma_asignaturarep_rel3',
         'asignatura_id', 'ciclo_id', string='Asignaturas Reprobadas por Tercera matricula'
     )
 
     #segunda matricula datos
+    segunda_matricula = fields.Boolean(string="Matricularse en segunda matrícula?", default=False)
     ciclo_materias_reprobadas = fields.Many2one("ma.ciclo", string="Ciclo en el cual reprobó asignaturas")
     # Campo para Paralelo y validaciones
     paralelo_ciclo_reprobar = fields.Many2one("ma.paralelo", string="Paralelo del Ciclo en el cual reprobó asignaturas")
 
     asignaturas_reprobadas = fields.Many2many(
-        'ma.asignatura', 'ma_asignaturarep_rel',
+        'ma.asignatura', 'ma_asignaturarep_rel2',
         'asignatura_id', 'ciclo_id', string='Asignaturas Reprobadas por Segunda Matricula'
     )
 
     #datos primera matricula
+    primera_matricula = fields.Boolean(string="Matricularse en primera matrícula?", default=False)
     ciclo_materias_pendientes = fields.Many2one("ma.ciclo", string="Ciclo en el cual tiene materias pendientes")
     asignaturas_pendientes = fields.Many2many(
-        'ma.asignatura', 'ma_asignaturarep_rel',
+        'ma.asignatura', 'ma_asignaturarep_rel1',
         'asignatura_id', 'ciclo_id', string='Asignaturas Pendientes'
     )
 
     #Campo para ciclo a matrícular
-    ciclo_materias_matricular = fields.Many2one("ma.ciclo", string="Ciclo en el cual se va a matricular")
     #Campo para guardar la respuesta luego de aplicar las normas de la U
-    asignaturas_maticular_ids = fields.One2many("ma.asignatura", "matricula_id", string="Materias matricular")
 
-    @api.onchange('asignaturas_reprobadas')
+    asignaturas_tercera = fields.Char(string="Materias matricular 3")
+    asignaturas_segunda = fields.Char(string="Materias matricular 2")
+    asignaturas_primera = fields.Char(string="Materias matricular 1")
+    ciclo_matricular = fields.Char(string="Ciclo en el que se va a matricular")
+
+
+
+
+    def botonmatricular(self):
+
+        #tercera matricula
+        asig_tercera_aux = []
+        for asig_tercera in self.asignaturas_reprobadas_tercera:
+            aux = [int(s) for s in re.findall(r'-?\d\d*', str(asig_tercera.ciclo_id.name))]
+            aux1 = int(aux[0])
+            dato = [aux1,str(asig_tercera.ciclo_id.name),str(asig_tercera.name)]
+            asig_tercera_aux.append(dato)
+
+        asig_tercera_aux_ordenada = sorted(asig_tercera_aux, key=lambda x: x[0])
+        self.ciclo_matricular = asig_tercera_aux_ordenada[0][1]
+        self.asignaturas_tercera = asig_tercera_aux_ordenada[0][2]
+
+        #segunda matricula
+        asig_segunda_aux = []
+        for asig_segunda in self.asignaturas_reprobadas:
+            aux = [int(s) for s in re.findall(r'-?\d\d*', str(asig_segunda.ciclo_id.name))]
+            aux1 = int(aux[0])
+            dato2 = [aux1, str(asig_segunda.ciclo_id.name), str(asig_segunda.name), str(asig_segunda.ciclo_id.id)]
+            asig_segunda_aux.append(dato2)
+            
+
+
+        asig_segunda_aux_ordenada = sorted(asig_segunda_aux, key=lambda x: x[0])
+        asig_segunda_aux_ordenada_des = sorted(asig_segunda_aux, key=lambda x: x[0], reverse=True)
+        self.ciclo_matricular = asig_segunda_aux_ordenada[0][1]
+        #materias2_concatenar = asig_segunda_aux_ordenada[0][2] +", "+ asig_segunda_aux_ordenada[1][2]
+        #self.asignaturas_segunda = materias2_concatenar
+
+        ciclo_mayor = asig_segunda_aux_ordenada_des[0][0]
+        id_ciclo = asig_segunda_aux_ordenada_des[0][3]
+        ciclo = self.env['ma.ciclo'].search(
+            [('id', '=', id_ciclo)])
+
+        n_asignaturas = ciclo.n_asignaturas
+        n_asignaturas = round(n_asignaturas * 0.40)
+        print(n_asignaturas)
+        c = 0
+        s = ""
+        for i in range(len(asig_segunda_aux_ordenada_des)):
+
+            if asig_segunda_aux_ordenada_des[i][0] == ciclo_mayor:
+
+                c += 1
+                if c > n_asignaturas:
+                    asig_segunda_aux_ordenada_des[i] = ["","",""]
+
+            aux = asig_segunda_aux_ordenada_des[i][2]
+            s = s + str(aux) + ", "
+        self.asignaturas_segunda = s
+        self.ciclo_matricular = ciclo_mayor
+
+
+
+
+
+
+
+        
+
+
     def _modificarCiclos(self):
         self._materiasMatricula()
         contador = 0
@@ -74,7 +144,7 @@ class Matricula(models.Model):
             raise ValidationError("No puedes seleccionar mas del 40% de materias")
 
 
-    @api.onchange('ciclo_materias_matricular')
+
     def _materiasMatricula(self):
 
         creditos = self.ciclo_materias_matricular.creditos
@@ -89,10 +159,7 @@ class Matricula(models.Model):
 
         paralelo_matricular = self.env['ma.paralelo'].search(
             [('name', '=', paralelo_anterior.name), ('ciclo_id', '=', ciclo_matricular.id)])
-        print("Entra")
-        print(paralelo_matricular.name)
-        print(paralelo_matricular)
-        print(ciclo_matricular.id)
+
         if paralelo_matricular.name == False:
             paralelo_matricular = self.env['ma.paralelo'].search(
                 [('ciclo_id', '=', ciclo_matricular.id)], limit=1)

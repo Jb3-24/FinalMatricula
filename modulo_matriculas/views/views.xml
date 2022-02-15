@@ -35,7 +35,7 @@
             </field>
         </record>
         -->
-<!--
+
         <record id="view_form_matricula" model="ir.ui.view">
             <field name="name">view.form.ma.matricula</field>
             <field name="model">ma.matricula</field>
@@ -53,30 +53,46 @@
                             </group>
 
                             <group>
-                                <field name ="ciclo_materias_reprobadas_tercera" domain="[('carrera_id', '=', carrera_id)]"/>
-                                <field name="asignaturas_reprobadas_tercera" domain="[('ciclo_id', '=', ciclo_materias_reprobadas_tercera)]"/>
+                                <field name ="ciclo_materias_reprobadas_tercera" domain="[('carrera_id', '=', carrera_id)]" attrs="{'invisible': [('tercera_matricula', '=', False)]}"/>
+                                <field name="asignaturas_reprobadas_tercera" domain="[('ciclo_id', '=', ciclo_materias_reprobadas_tercera)]" attrs="{'invisible': [('tercera_matricula', '=', False)]}"/>
+                            </group>
+                            <group>
+                                <field name ="segunda_matricula"/>
                             </group>
 
                             <group>
-                                <field name="ciclo_materias_reprobadas" domain="[('carrera_id', '=', carrera_id)]"/>
-                                <field name="paralelo_ciclo_reprobar" domain="[('ciclo_id', '=', ciclo_materias_reprobadas)]"/>
-                                <field name="asignaturas_reprobadas" domain="[('ciclo_id', '=', ciclo_materias_reprobadas)]"/>
+                                <field name="ciclo_materias_reprobadas" domain="[('carrera_id', '=', carrera_id)]" attrs="{'invisible': [('segunda_matricula', '=', False)]}"/>
+                                <field name="paralelo_ciclo_reprobar" domain="[('ciclo_id', '=', ciclo_materias_reprobadas)]" attrs="{'invisible': [('segunda_matricula', '=', False)]}"/>
+                                <field name="asignaturas_reprobadas" domain="[('ciclo_id', '=', ciclo_materias_reprobadas)]" attrs="{'invisible': [('segunda_matricula', '=', False)]}"/>
                             </group>
 
                             <group>
-                                <field name ="ciclo_materias_reprobadas_tercera" domain="[('carrera_id', '=', carrera_id)]"/>
-                                <field name="asignaturas_reprobadas_tercera" domain="[('ciclo_id', '=', ciclo_materias_reprobadas_tercera)]"/>
+                                <field name ="primera_matricula"/>
                             </group>
 
                             <group>
-                                <field name ="ciclo_materias_matricular" domain="[('carrera_id', '=', carrera_id)]"/>
-                                <field name="asignaturas_matricular" domain="[('ciclo_id', '=', ciclo_materias_matricular)]"/>
+                                <field name ="ciclo_materias_pendientes" domain="[('carrera_id', '=', carrera_id)]" attrs="{'invisible': [('primera_matricula', '=', False)]}"/>
+                                <field name="asignaturas_pendientes" domain="[('ciclo_id', '=', ciclo_materias_pendientes)]" attrs="{'invisible': [('primera_matricula', '=', False)]}"/>
+                            </group>
+                            <group>
+                                <button style="float: center;"
+                                    string="Obtener resultados matrícula"
+                                    type="object"
+                                    name="botonmatricular"
+                                    class="btn btn-primary"/>
+                            </group>
+                            <group>
+
+                                <field name="ciclo_matricular" readonly="1"/>
+                                <field name="asignaturas_tercera" readonly="1"/>
+                                <field name="asignaturas_segunda" readonly="1"/>
+
                             </group>
                     </sheet>
                 </form>
             </field>
         </record>
--->
+
         <!--Vista Tree Periodo Matricula Alumno-->
         <record id="view_tree_periodo_matricula_alumno" model="ir.ui.view">
             <field name="name">view.tree.ma.periodomatricula</field>
