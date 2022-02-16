@@ -58,6 +58,8 @@ class Matricula(models.Model):
 
     #Campo para ciclo a matrícular
     #Campo para guardar la respuesta luego de aplicar las normas de la U
+    ciclo_matricular_especial = fields.Many2one("ma.ciclo", string="Ciclo en el cual desea matricularse")
+    validar_matricula_1_2 = fields.Boolean(string="Validar primera Matrícula", default=False)
 
     asignaturas_tercera = fields.Char(string="Materias matricular 3")
     asignaturas_segunda = fields.Char(string="Materias matricular 2")
@@ -78,11 +80,13 @@ class Matricula(models.Model):
             asig_tercera_aux.append(dato)
 
         asig_tercera_aux_ordenada = sorted(asig_tercera_aux, key=lambda x: x[0])
-        self.ciclo_matricular = asig_tercera_aux_ordenada[0][1]
-        self.asignaturas_tercera = asig_tercera_aux_ordenada[0][2]
+        if self.asignaturas_reprobadas_tercera:
+            self.ciclo_matricular = asig_tercera_aux_ordenada[0][1]
+            self.asignaturas_tercera = asig_tercera_aux_ordenada[0][2]
 
         #segunda matricula
         asig_segunda_aux = []
+
         for asig_segunda in self.asignaturas_reprobadas:
             aux = [int(s) for s in re.findall(r'-?\d\d*', str(asig_segunda.ciclo_id.name))]
             aux1 = int(aux[0])
@@ -93,12 +97,16 @@ class Matricula(models.Model):
 
         asig_segunda_aux_ordenada = sorted(asig_segunda_aux, key=lambda x: x[0])
         asig_segunda_aux_ordenada_des = sorted(asig_segunda_aux, key=lambda x: x[0], reverse=True)
-        self.ciclo_matricular = asig_segunda_aux_ordenada[0][1]
+        ciclo_mayor=0
+        id_ciclo = 0
+        if self.asignaturas_reprobadas:
+            self.ciclo_matricular = asig_segunda_aux_ordenada[0][1]
+            ciclo_mayor = asig_segunda_aux_ordenada_des[0][0]
+            id_ciclo = asig_segunda_aux_ordenada_des[0][3]
         #materias2_concatenar = asig_segunda_aux_ordenada[0][2] +", "+ asig_segunda_aux_ordenada[1][2]
         #self.asignaturas_segunda = materias2_concatenar
 
-        ciclo_mayor = asig_segunda_aux_ordenada_des[0][0]
-        id_ciclo = asig_segunda_aux_ordenada_des[0][3]
+
         ciclo = self.env['ma.ciclo'].search(
             [('id', '=', id_ciclo)])
 
@@ -107,18 +115,120 @@ class Matricula(models.Model):
         print(n_asignaturas)
         c = 0
         s = ""
+        materias_mismo_ciclo =""
+        diferentes_ciclo = False
+
         for i in range(len(asig_segunda_aux_ordenada_des)):
+            if asig_segunda_aux_ordenada_des[i][0] != ciclo_mayor:
+                diferentes_ciclo = True
+            aux = asig_segunda_aux_ordenada_des[i][2]
+            materias_mismo_ciclo = materias_mismo_ciclo + str(aux) + ", "
 
+        
+        for i in range(len(asig_segunda_aux_ordenada_des)):
             if asig_segunda_aux_ordenada_des[i][0] == ciclo_mayor:
-
                 c += 1
                 if c > n_asignaturas:
                     asig_segunda_aux_ordenada_des[i] = ["","",""]
-
             aux = asig_segunda_aux_ordenada_des[i][2]
             s = s + str(aux) + ", "
-        self.asignaturas_segunda = s
-        self.ciclo_matricular = ciclo_mayor
+
+        if diferentes_ciclo:
+            self.asignaturas_segunda = s
+        else:
+            self.asignaturas_segunda = materias_mismo_ciclo
+
+        if self.asignaturas_reprobadas:
+            self.ciclo_matricular = ciclo_mayor
+
+        #primera matricuala
+
+        asig_primera_aux = []
+
+        for asig_primera in self.asignaturas_pendientes:
+            aux = [int(s) for s in re.findall(r'-?\d\d*', str(asig_primera.ciclo_id.name))]
+            aux1 = int(aux[0])
+            dato3 = [aux1, str(asig_primera.ciclo_id.name), str(asig_primera.name), str(asig_primera.ciclo_id.id)]
+            asig_primera_aux.append(dato3)
+
+        asig_primera_aux_ordenada = sorted(asig_primera_aux, key=lambda x: x[0])
+        asig_primera_aux_ordenada_des = sorted(asig_primera_aux, key=lambda x: x[0], reverse=True)
+
+        ciclo_mayor1 = 0
+        id_ciclo = 0
+        if self.asignaturas_pendientes:
+            self.ciclo_matricular = asig_primera_aux_ordenada[0][1]
+            ciclo_mayor1 = asig_primera_aux_ordenada_des[0][0]
+            id_ciclo = asig_primera_aux_ordenada_des[0][3]
+
+
+        ciclo = self.env['ma.ciclo'].search(
+            [('id', '=', id_ciclo)])
+
+        n_asignaturas1 = ciclo.n_asignaturas
+        n_asignaturas1 = round(n_asignaturas1 * 0.40)
+        print(n_asignaturas1)
+        c = 0
+        s = ""
+        materias_mismo_ciclo1 = ""
+        diferentes_ciclo = False
+
+        for i in range(len(asig_primera_aux_ordenada_des)):
+            if asig_primera_aux_ordenada_des[i][0] != ciclo_mayor1:
+                diferentes_ciclo = True
+            aux = asig_primera_aux_ordenada_des[i][2]
+            materias_mismo_ciclo1 = materias_mismo_ciclo1 + str(aux) + ", "
+
+        for i in range(len(asig_primera_aux_ordenada_des)):
+            if asig_primera_aux_ordenada_des[i][0] == ciclo_mayor1:
+                c += 1
+                if c > n_asignaturas1:
+                    asig_primera_aux_ordenada_des[i] = ["", "", ""]
+            aux = asig_primera_aux_ordenada_des[i][2]
+            s = s + str(aux) + ", "
+
+        if diferentes_ciclo:
+            self.asignaturas_primera = s
+        else:
+            self.asignaturas_primera = materias_mismo_ciclo1
+
+        if self.asignaturas_pendientes:
+            self.ciclo_matricular = ciclo_mayor1
+
+        if self.asignaturas_reprobadas_tercera:
+            print("Hay tercera matricula")
+            self.asignaturas_segunda = ""
+            self.asignaturas_primera = ""
+        else:
+            self.asignaturas_tercera = ""
+
+
+
+            
+
+    @api.onchange('asignaturas_pendientes','asignaturas_reprobadas','asignaturas_reprobadas_tercera')
+    def validar_primera_matricula(self):
+        print("Entra")
+        asig_primera_aux = []
+        for asig_primera in self.asignaturas_pendientes:
+            aux = [int(s) for s in re.findall(r'-?\d\d*', str(asig_primera.ciclo_id.name))]
+            aux1 = int(aux[0])
+            dato2 = [aux1, str(asig_primera.ciclo_id.name), str(asig_primera.name), str(asig_primera.ciclo_id.id)]
+            asig_primera_aux.append(dato2)
+        #validar primera
+        if not self.asignaturas_reprobadas_tercera and not self.asignaturas_reprobadas and self.asignaturas_pendientes:
+            print("Entra")
+            if len(asig_primera_aux) <= 2:
+                print("Entra")
+                self.validar_matricula_1_2 = True
+            else:
+                self.validar_matricula_1_2 = False
+        else:
+            self.validar_matricula_1_2 = False
+
+
+
+
 
 
 
@@ -226,7 +336,7 @@ class Matricula(models.Model):
         else:
             return super(Matricula, self).create(vals)
 
-
+        #self.ciclo_matricular = asig_tercera_aux_ordenada[0][1]
 
 
 class Asignatura(models.Model):

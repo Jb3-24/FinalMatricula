@@ -69,10 +69,11 @@
                             <group>
                                 <field name ="primera_matricula"/>
                             </group>
-
                             <group>
                                 <field name ="ciclo_materias_pendientes" domain="[('carrera_id', '=', carrera_id)]" attrs="{'invisible': [('primera_matricula', '=', False)]}"/>
                                 <field name="asignaturas_pendientes" domain="[('ciclo_id', '=', ciclo_materias_pendientes)]" attrs="{'invisible': [('primera_matricula', '=', False)]}"/>
+                                <field name="validar_matricula_1_2" invisible="1"/>
+                                <field name ="ciclo_matricular_especial" domain="[('carrera_id', '=', carrera_id)]"  attrs="{'invisible': [('validar_matricula_1_2', '=', False)]}"/>
                             </group>
                             <group>
                                 <button style="float: center;"
@@ -81,11 +82,13 @@
                                     name="botonmatricular"
                                     class="btn btn-primary"/>
                             </group>
+
                             <group>
 
                                 <field name="ciclo_matricular" readonly="1"/>
                                 <field name="asignaturas_tercera" readonly="1"/>
                                 <field name="asignaturas_segunda" readonly="1"/>
+                                <field name="asignaturas_primera" readonly="1"/>
 
                             </group>
                     </sheet>
