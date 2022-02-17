@@ -71,6 +71,8 @@ class Matricula(models.Model):
 
     def botonmatricular(self):
 
+        if self.primera_matricula == False and self.segunda_matricula == False  and self.tercera_matricula == False :
+            raise ValidationError("Por favor Ingrese valores")
         #tercera matricula
         asig_tercera_aux = []
         for asig_tercera in self.asignaturas_reprobadas_tercera:
@@ -203,8 +205,153 @@ class Matricula(models.Model):
             self.asignaturas_tercera = ""
 
 
+        #En segunda matrícula hay 2 o 1 asignatura y el resto de campos esta vacío.
+        if (len(asig_segunda_aux) == 2 or len(asig_segunda_aux) == 1) and len(asig_primera_aux)==0 and len(asig_tercera_aux)==0:
+            nuevo_ciclo_matricular = ciclo_mayor + 1
+            nuevo_ciclo_matricular = "ciclo_" + str(nuevo_ciclo_matricular)
+            ciclo_siguiente2 = self.env['ma.ciclo'].search(
+                [('numero_ciclo', '=', nuevo_ciclo_matricular)],limit=1)
+            num_asig_aux = ciclo_siguiente2.n_asignaturas
+            sesentaxciento_materias = round(int(num_asig_aux) * 0.6)
 
-            
+            asignaturas_ciclo_siguiente2 = self.env['ma.asignatura'].search(
+                [('ciclo_id', '=', ciclo_siguiente2.id)])
+            name_asig = ""
+            name_asig_correcto = ""
+            for amayor in asignaturas_ciclo_siguiente2:
+                for i in range(len(asig_segunda_aux)):
+                    for prerre in amayor.prerrequisitos:
+                        if str(prerre._origin.name) == str(asig_segunda_aux[i][2]):
+                            aux_prerre = amayor.name + ", "
+                            name_asig = name_asig + aux_prerre
+
+                if not(amayor.name in name_asig):
+                    aux_prerre_si = amayor.name + ", "
+                    name_asig_correcto = name_asig_correcto + aux_prerre_si
+
+            print(name_asig)
+            print(name_asig_correcto)
+            materias_si = name_asig_correcto.split(sep=', ')
+            materias_add = ""
+            print(sesentaxciento_materias)
+            if len(materias_si) >= sesentaxciento_materias:
+                for i in range(sesentaxciento_materias):
+                    materias_add= materias_add + materias_si[i]  + ","
+            else:
+                materias_add = name_asig_correcto
+
+            materias_add = materias_add.replace(',,','')
+            self.asignaturas_primera = materias_add + ","
+            self.ciclo_matricular = ciclo_siguiente2.name
+
+
+        #En segunda matrícula hay 1 y en asignaturas pendientes también hay 1.
+        if len(asig_segunda_aux) == 1 and len(asig_primera_aux) == 1 and len(asig_tercera_aux)==0:
+
+            print("ENtradadasdasdadasd")
+            print(ciclo_mayor)
+            nuevo_ciclo_matricular = ciclo_mayor + 1
+            nuevo_ciclo_matricular = "ciclo_" + str(nuevo_ciclo_matricular)
+            print(nuevo_ciclo_matricular)
+            ciclo_siguiente2 = self.env['ma.ciclo'].search(
+                [('numero_ciclo', '=', nuevo_ciclo_matricular)], limit=1)
+            num_asig_aux = ciclo_siguiente2.n_asignaturas
+            sesentaxciento_materias = round(int(num_asig_aux) * 0.6)
+
+            asignaturas_ciclo_siguiente2 = self.env['ma.asignatura'].search(
+                [('ciclo_id', '=', ciclo_siguiente2.id)])
+            name_asig = ""
+            name_asig_correcto = ""
+            for amayor in asignaturas_ciclo_siguiente2:
+                for i in range(len(asig_segunda_aux)):
+                    print(amayor.name)
+                    for prerre in amayor.prerrequisitos:
+
+                        print(prerre._origin.name)
+                        print(asig_segunda_aux[i][2])
+                        if str(prerre._origin.name) == str(asig_segunda_aux[i][2]):
+                            aux_prerre = amayor.name + ", "
+                            print(aux_prerre)
+                            name_asig = name_asig + aux_prerre
+
+                if not (amayor.name in name_asig):
+                    aux_prerre_si = amayor.name + ", "
+                    name_asig_correcto = name_asig_correcto + aux_prerre_si
+
+            print(name_asig)
+            print(name_asig_correcto)
+            materias_si = name_asig_correcto.split(sep=', ')
+            materias_add = ""
+            print(sesentaxciento_materias)
+            if len(materias_si) >= sesentaxciento_materias:
+                for i in range(sesentaxciento_materias):
+                    materias_add = materias_add + materias_si[i] + ","
+            else:
+                materias_add = name_asig_correcto
+
+            materias_add = materias_add.replace(',,', '')
+            self.asignaturas_primera = materias_add + ","
+            self.ciclo_matricular = ciclo_siguiente2.name
+
+        if (len(asig_primera_aux) == 2 or len(asig_primera_aux) == 1) and len(asig_segunda_aux) == 0 and len(asig_tercera_aux) == 0:
+
+            print("Entra1111111111111111")
+
+
+            ciclo_siguiente2 = self.env['ma.ciclo'].search(
+                [('id', '=', int(self.ciclo_matricular_especial.id))], limit=1)
+            num_asig_aux = ciclo_siguiente2.n_asignaturas
+            sesentaxciento_materias = round(int(num_asig_aux) * 0.6)
+
+            asignaturas_ciclo_siguiente2 = self.env['ma.asignatura'].search(
+                [('ciclo_id', '=', ciclo_siguiente2.id)])
+            name_asig = ""
+            name_asig_correcto = ""
+            for amayor in asignaturas_ciclo_siguiente2:
+                for i in range(len(asig_segunda_aux)):
+                    print(amayor.name)
+                    for prerre in amayor.prerrequisitos:
+
+                        print(prerre._origin.name)
+                        print(asig_segunda_aux[i][2])
+                        if str(prerre._origin.name) == str(asig_segunda_aux[i][2]):
+                            aux_prerre = amayor.name + ", "
+                            print(aux_prerre)
+                            name_asig = name_asig + aux_prerre
+
+                if not (amayor.name in name_asig):
+                    aux_prerre_si = amayor.name + ", "
+                    name_asig_correcto = name_asig_correcto + aux_prerre_si
+
+            print(name_asig)
+            print(name_asig_correcto)
+            materias_si = name_asig_correcto.split(sep=', ')
+            materias_add = ""
+            print(sesentaxciento_materias)
+            if len(materias_si) >= sesentaxciento_materias:
+                for i in range(sesentaxciento_materias):
+                    materias_add = materias_add + materias_si[i] + ","
+            else:
+                materias_add = name_asig_correcto
+
+            materias_add = materias_add.replace(',,', '')
+            add = ""
+            for i in range(len(asig_primera_aux)):
+                add = add + asig_primera_aux[i][2] + ","
+            self.asignaturas_primera = materias_add + add
+
+
+            self.ciclo_matricular = ciclo_siguiente2.name
+
+
+
+
+
+
+
+
+
+
 
     @api.onchange('asignaturas_pendientes','asignaturas_reprobadas','asignaturas_reprobadas_tercera')
     def validar_primera_matricula(self):
