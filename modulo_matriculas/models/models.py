@@ -68,7 +68,6 @@ class Matricula(models.Model):
 
 
 
-
     def botonmatricular(self):
 
         if self.primera_matricula == False and self.segunda_matricula == False  and self.tercera_matricula == False :
@@ -92,7 +91,7 @@ class Matricula(models.Model):
         for asig_segunda in self.asignaturas_reprobadas:
             aux = [int(s) for s in re.findall(r'-?\d\d*', str(asig_segunda.ciclo_id.name))]
             aux1 = int(aux[0])
-            dato2 = [aux1, str(asig_segunda.ciclo_id.name), str(asig_segunda.name), str(asig_segunda.ciclo_id.id)]
+            dato2 = [aux1, str(asig_segunda.ciclo_id.name), str(asig_segunda.name), str(asig_segunda.ciclo_id.id), asig_segunda.id]
             asig_segunda_aux.append(dato2)
             
 
@@ -150,7 +149,7 @@ class Matricula(models.Model):
         for asig_primera in self.asignaturas_pendientes:
             aux = [int(s) for s in re.findall(r'-?\d\d*', str(asig_primera.ciclo_id.name))]
             aux1 = int(aux[0])
-            dato3 = [aux1, str(asig_primera.ciclo_id.name), str(asig_primera.name), str(asig_primera.ciclo_id.id)]
+            dato3 = [aux1, str(asig_primera.ciclo_id.name), str(asig_primera.name), str(asig_primera.ciclo_id.id), asig_primera.id]
             asig_primera_aux.append(dato3)
 
         asig_primera_aux_ordenada = sorted(asig_primera_aux, key=lambda x: x[0])
@@ -204,6 +203,7 @@ class Matricula(models.Model):
         else:
             self.asignaturas_tercera = ""
 
+        suma_creditos = 0
 
         #En segunda matrícula hay 2 o 1 asignatura y el resto de campos esta vacío.
         if (len(asig_segunda_aux) == 2 or len(asig_segunda_aux) == 1) and len(asig_primera_aux)==0 and len(asig_tercera_aux)==0:
@@ -213,32 +213,87 @@ class Matricula(models.Model):
                 [('numero_ciclo', '=', nuevo_ciclo_matricular)],limit=1)
             num_asig_aux = ciclo_siguiente2.n_asignaturas
             sesentaxciento_materias = round(int(num_asig_aux) * 0.6)
+            creditos = 0
+            if ciclo_siguiente2:
+                creditos_aux = ciclo_siguiente2.creditos
+                creditos = round(creditos_aux * 0.6)
+                asignaturas_ciclo_siguiente2 = self.env['ma.asignatura'].search(
+                    [('ciclo_id', '=', ciclo_siguiente2.id)])
 
-            asignaturas_ciclo_siguiente2 = self.env['ma.asignatura'].search(
-                [('ciclo_id', '=', ciclo_siguiente2.id)])
+            creditos_asig = []
             name_asig = ""
             name_asig_correcto = ""
             for amayor in asignaturas_ciclo_siguiente2:
                 for i in range(len(asig_segunda_aux)):
                     for prerre in amayor.prerrequisitos:
                         if str(prerre._origin.name) == str(asig_segunda_aux[i][2]):
+                            aux_materias_eliminar = self.verificar_horario(ciclo_siguiente2.id, asig_segunda_aux[i][4])
+                            if aux_materias_eliminar != None:
+                                name_asig = str(name_asig)+", "+str(aux_materias_eliminar)
                             aux_prerre = amayor.name + ", "
                             name_asig = name_asig + aux_prerre
 
                 if not(amayor.name in name_asig):
+                    suma_creditos = suma_creditos + amayor.creditos
+                    creditos_asig.append(amayor.creditos)
                     aux_prerre_si = amayor.name + ", "
                     name_asig_correcto = name_asig_correcto + aux_prerre_si
+
 
             print(name_asig)
             print(name_asig_correcto)
             materias_si = name_asig_correcto.split(sep=', ')
+            for x in range(len(materias_si)):
+                if not materias_si[x]:
+                    materias_si.pop(x)
+            print("________________________________________")
+            print(len(materias_si))
+            print(len(creditos_asig))
+            print(materias_si)
+            print(creditos_asig)
             materias_add = ""
             print(sesentaxciento_materias)
-            if len(materias_si) >= sesentaxciento_materias:
-                for i in range(sesentaxciento_materias):
-                    materias_add= materias_add + materias_si[i]  + ","
-            else:
-                materias_add = name_asig_correcto
+            for i in range(3):
+
+                if suma_creditos > creditos:
+                    aux = len(materias_si)
+                    aux_menor = 500
+                    for x in range(len(materias_si)):
+                        if creditos_asig[x] < aux_menor:
+                            print(materias_si[x])
+                            aux = x
+                            aux_menor = creditos_asig[x]
+                    print(materias_si[x])
+                    print(materias_si)
+                    print(creditos_asig)
+                    print(x)
+                    suma_creditos = suma_creditos - creditos_asig[aux]
+                    materias_si.pop(aux)
+                    creditos_asig.pop(aux)
+
+                    print(materias_si)
+                    print(creditos_asig)
+
+            #aqui
+            print()
+            for i in range(3):
+                aux = 20
+                aux_menor = 500
+                if len(materias_si) > sesentaxciento_materias:
+                    print("nUMERO MATERIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+                    print(len(materias_si))
+                    print(sesentaxciento_materias)
+                    print(materias_si)
+                    for x in range(len(materias_si)):
+                        if creditos_asig[x] < aux_menor:
+                            aux = x
+                            aux_menor = creditos_asig[x]
+                    materias_si.pop(aux)
+                    creditos_asig.pop(aux)
+
+            for i in range(len(materias_si)):
+                materias_add= materias_add + materias_si[i]+","
+
 
             materias_add = materias_add.replace(',,','')
             self.asignaturas_primera = materias_add + ","
@@ -270,29 +325,78 @@ class Matricula(models.Model):
                         print(prerre._origin.name)
                         print(asig_segunda_aux[i][2])
                         if str(prerre._origin.name) == str(asig_segunda_aux[i][2]):
+                            aux_materias_eliminar = self.verificar_horario(ciclo_siguiente2.id, asig_segunda_aux[i][4])
+                            if aux_materias_eliminar != None:
+                                name_asig = str(name_asig)+", "+str(aux_materias_eliminar)
                             aux_prerre = amayor.name + ", "
                             print(aux_prerre)
                             name_asig = name_asig + aux_prerre
 
                 if not (amayor.name in name_asig):
+                    suma_creditos = suma_creditos + amayor.creditos
+                    creditos_asig.append(amayor.creditos)
                     aux_prerre_si = amayor.name + ", "
                     name_asig_correcto = name_asig_correcto + aux_prerre_si
 
             print(name_asig)
             print(name_asig_correcto)
             materias_si = name_asig_correcto.split(sep=', ')
+            for x in range(len(materias_si)):
+                if not materias_si[x]:
+                    materias_si.pop(x)
+            print("________________________________________")
+            print(len(materias_si))
+            print(len(creditos_asig))
+            print(materias_si)
+            print(creditos_asig)
             materias_add = ""
             print(sesentaxciento_materias)
-            if len(materias_si) >= sesentaxciento_materias:
-                for i in range(sesentaxciento_materias):
-                    materias_add = materias_add + materias_si[i] + ","
-            else:
-                materias_add = name_asig_correcto
+            for i in range(3):
+
+                if suma_creditos > creditos:
+                    aux = len(materias_si)
+                    aux_menor = 500
+                    for x in range(len(materias_si)):
+                        if creditos_asig[x] < aux_menor:
+                            print(materias_si[x])
+                            aux = x
+                            aux_menor = creditos_asig[x]
+                    print(materias_si[x])
+                    print(materias_si)
+                    print(creditos_asig)
+                    print(x)
+                    suma_creditos = suma_creditos - creditos_asig[aux]
+                    materias_si.pop(aux)
+                    creditos_asig.pop(aux)
+
+                    print(materias_si)
+                    print(creditos_asig)
+
+            # aqui
+            print()
+            for i in range(3):
+                aux = 20
+                aux_menor = 500
+                if len(materias_si) > sesentaxciento_materias:
+                    print("nUMERO MATERIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+                    print(len(materias_si))
+                    print(sesentaxciento_materias)
+                    print(materias_si)
+                    for x in range(len(materias_si)):
+                        if creditos_asig[x] < aux_menor:
+                            aux = x
+                            aux_menor = creditos_asig[x]
+                    materias_si.pop(aux)
+                    creditos_asig.pop(aux)
+
+            for i in range(len(materias_si)):
+                materias_add = materias_add + materias_si[i] + ","
 
             materias_add = materias_add.replace(',,', '')
             self.asignaturas_primera = materias_add + ","
             self.ciclo_matricular = ciclo_siguiente2.name
 
+        #caso tres 0 segunda y 1 o 2 en pendientes
         if (len(asig_primera_aux) == 2 or len(asig_primera_aux) == 1) and len(asig_segunda_aux) == 0 and len(asig_tercera_aux) == 0:
 
             print("Entra1111111111111111")
@@ -308,48 +412,135 @@ class Matricula(models.Model):
             name_asig = ""
             name_asig_correcto = ""
             for amayor in asignaturas_ciclo_siguiente2:
-                for i in range(len(asig_segunda_aux)):
+                for i in range(len(asig_primera_aux)):
                     print(amayor.name)
                     for prerre in amayor.prerrequisitos:
 
                         print(prerre._origin.name)
-                        print(asig_segunda_aux[i][2])
-                        if str(prerre._origin.name) == str(asig_segunda_aux[i][2]):
+                        print(asig_primera_aux[i][2])
+                        if str(prerre._origin.name) == str(asig_primera_aux[i][2]):
+                            aux_materias_eliminar = self.verificar_horario(ciclo_siguiente2.id, asig_primera_aux[i][4])
+                            if aux_materias_eliminar != None:
+                                name_asig = str(name_asig)+", "+str(aux_materias_eliminar)
                             aux_prerre = amayor.name + ", "
                             print(aux_prerre)
                             name_asig = name_asig + aux_prerre
 
                 if not (amayor.name in name_asig):
+                    suma_creditos = suma_creditos + amayor.creditos
+                    creditos_asig.append(amayor.creditos)
                     aux_prerre_si = amayor.name + ", "
                     name_asig_correcto = name_asig_correcto + aux_prerre_si
 
             print(name_asig)
             print(name_asig_correcto)
             materias_si = name_asig_correcto.split(sep=', ')
+            for x in range(len(materias_si)):
+                if not materias_si[x]:
+                    materias_si.pop(x)
+            print("________________________________________")
+            print(len(materias_si))
+            print(len(creditos_asig))
+            print(materias_si)
+            print(creditos_asig)
             materias_add = ""
             print(sesentaxciento_materias)
-            if len(materias_si) >= sesentaxciento_materias:
-                for i in range(sesentaxciento_materias):
-                    materias_add = materias_add + materias_si[i] + ","
-            else:
-                materias_add = name_asig_correcto
+            for i in range(3):
+
+                if suma_creditos > creditos:
+                    aux = len(materias_si)
+                    aux_menor = 500
+                    for x in range(len(materias_si)):
+                        if creditos_asig[x] < aux_menor:
+                            print(materias_si[x])
+                            aux = x
+                            aux_menor = creditos_asig[x]
+                    print(materias_si[x])
+                    print(materias_si)
+                    print(creditos_asig)
+                    print(x)
+                    suma_creditos = suma_creditos - creditos_asig[aux]
+                    materias_si.pop(aux)
+                    creditos_asig.pop(aux)
+
+                    print(materias_si)
+                    print(creditos_asig)
+
+            # aqui
+            print()
+            for i in range(3):
+                aux = 20
+                aux_menor = 500
+                if len(materias_si) > sesentaxciento_materias:
+                    print("nUMERO MATERIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+                    print(len(materias_si))
+                    print(sesentaxciento_materias)
+                    print(materias_si)
+                    for x in range(len(materias_si)):
+                        if creditos_asig[x] < aux_menor:
+                            aux = x
+                            aux_menor = creditos_asig[x]
+                    materias_si.pop(aux)
+                    creditos_asig.pop(aux)
+
+            for i in range(len(materias_si)):
+                materias_add = materias_add + materias_si[i] + ","
 
             materias_add = materias_add.replace(',,', '')
             add = ""
             for i in range(len(asig_primera_aux)):
                 add = add + asig_primera_aux[i][2] + ","
             self.asignaturas_primera = materias_add + add
-
-
             self.ciclo_matricular = ciclo_siguiente2.name
 
 
 
+    def verificar_horario(self, id_ciclo_matricular, reprobadas_id):
 
+        error_horario = []
 
+        paralelo_anterior = self.paralelo_ciclo_reprobar
 
+        paralelo_matricular = self.env['ma.paralelo'].search(
+            [('name', '=', paralelo_anterior.name), ('ciclo_id', '=', id_ciclo_matricular)])
 
+        if paralelo_matricular.name == False:
+            paralelo_matricular = self.env['ma.paralelo'].search(
+                [('ciclo_id', '=', id_ciclo_matricular)], limit=1)
+        # Horario Inicio
+        for pa_lunes in paralelo_anterior.horario_lunes:
+            for pm_lunes in paralelo_matricular.horario_lunes:
+                if pa_lunes.asignatura_id.id == reprobadas_id and pa_lunes.numero_hora == pm_lunes.numero_hora \
+                        and pm_lunes.asignatura_id.id == id_ciclo_matricular:
+                    error_horario.append(pm_lunes.asignatura_id.name)
+        for pa_martes in paralelo_anterior.horario_martes:
+            for pm_martes in paralelo_matricular.horario_martes:
+                if pa_martes.asignatura_id.id == reprobadas_id and pa_martes.numero_hora == pm_martes.numero_hora \
+                        and pm_martes.asignatura_id.id == id_ciclo_matricular:
+                    error_horario.append(pm_martes.asignatura_id.name)
+        for pa_miercoles in paralelo_anterior.horario_miercoles:
+            for pm_miercoles in paralelo_matricular.horario_miercoles:
+                if pa_miercoles.asignatura_id.id == reprobadas_id and pa_miercoles.numero_hora == pm_miercoles.numero_hora \
+                        and pm_miercoles.asignatura_id.id == id_ciclo_matricular:
+                    error_horario.append(pm_miercoles.asignatura_id.name)
+        for pa_jueves in paralelo_anterior.horario_jueves:
+            for pm_jueves in paralelo_matricular.horario_jueves:
+                if pa_jueves.asignatura_id.id == reprobadas_id and pa_jueves.numero_hora == pm_jueves.numero_hora \
+                        and pm_jueves.asignatura_id.id == id_ciclo_matricular:
+                    error_horario.append(pm_jueves.asignatura_id.name)
+        for pa_viernes in paralelo_anterior.horario_viernes:
+            for pm_viernes in paralelo_matricular.horario_viernes:
+                if pa_viernes.asignatura_id.id == reprobadas_id and pa_viernes.numero_hora == pm_viernes.numero_hora \
+                        and pm_viernes.asignatura_id.id == id_ciclo_matricular:
+                    error_horario.append(pm_viernes.asignatura_id.name)
+        # Horario Fin
+        if error_horario:
+            resultantList = ""
 
+            for element in error_horario:
+                if element not in resultantList:
+                    resultantList = resultantList + ", "
+            return resultantList
 
 
 
