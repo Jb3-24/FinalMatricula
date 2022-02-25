@@ -43,8 +43,11 @@
                 <form  create="false">
                     <sheet>
                             <group>
+                                <field name ="decano" groups="modulo_matriculas.res_groups_administrador"/>
                                 <field name ="nombre_alumno"/>
                                 <field name ="cedula_alumno"/>
+                                <field name ="periodo_id"/>
+
                                 <field name="carrera_id" />
                             </group>
 

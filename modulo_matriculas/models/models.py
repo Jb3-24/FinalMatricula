@@ -14,7 +14,8 @@ class Matricula(models.Model):
     _name = "ma.matricula"
     _description = "Matricula"
 
-    name = string = "Matriculas"
+    name = fields.Char(string="Matricula", default="Editar este formulario")
+    decano = fields.Char(string="Nombre del Decano", default="Decano")
     nombre_alumno = fields.Char(string="Nombre", required=True, default="[Nombre alumno]")
     cedula_alumno = fields.Char(string="Cédula", required=True, default="[Número de cédula]")
 
@@ -26,6 +27,11 @@ class Matricula(models.Model):
     carrera_id = fields.Many2one(
         "ma.carrera", string="Carrera",
         default=lambda self: self.env['ma.carrera'].search([], limit=1),
+        ondelete="cascade")
+
+    periodo_id = fields.Many2one(
+        "ma.periodomatricula", string="Periodo Matrícula",
+        default=lambda self: self.env['ma.periodomatricula'].search([], limit=1),
         ondelete="cascade")
 
     
