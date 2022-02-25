@@ -225,11 +225,13 @@ class Matricula(models.Model):
             name_asig_correcto = ""
             for amayor in asignaturas_ciclo_siguiente2:
                 for i in range(len(asig_segunda_aux)):
+                    print("eNTRA A HORARIO")
+                    aux_materias_eliminar = self.verificar_horario(ciclo_siguiente2.id, asig_segunda_aux[i][4])
+                    print(aux_materias_eliminar)
+                    if aux_materias_eliminar != None:
+                        name_asig = str(name_asig) + ", " + str(aux_materias_eliminar)
                     for prerre in amayor.prerrequisitos:
                         if str(prerre._origin.name) == str(asig_segunda_aux[i][2]):
-                            aux_materias_eliminar = self.verificar_horario(ciclo_siguiente2.id, asig_segunda_aux[i][4])
-                            if aux_materias_eliminar != None:
-                                name_asig = str(name_asig)+", "+str(aux_materias_eliminar)
                             aux_prerre = amayor.name + ", "
                             name_asig = name_asig + aux_prerre
 
@@ -319,20 +321,17 @@ class Matricula(models.Model):
             name_asig_correcto = ""
             for amayor in asignaturas_ciclo_siguiente2:
                 for i in range(len(asig_segunda_aux)):
-                    print(amayor.name)
+                    print("eNTRA A HORARIO")
+                    aux_materias_eliminar = self.verificar_horario(ciclo_siguiente2.id, asig_segunda_aux[i][4])
+                    print(aux_materias_eliminar)
+                    if aux_materias_eliminar != None:
+                        name_asig = str(name_asig) + ", " + str(aux_materias_eliminar)
                     for prerre in amayor.prerrequisitos:
-
-                        print(prerre._origin.name)
-                        print(asig_segunda_aux[i][2])
                         if str(prerre._origin.name) == str(asig_segunda_aux[i][2]):
-                            aux_materias_eliminar = self.verificar_horario(ciclo_siguiente2.id, asig_segunda_aux[i][4])
-                            if aux_materias_eliminar != None:
-                                name_asig = str(name_asig)+", "+str(aux_materias_eliminar)
                             aux_prerre = amayor.name + ", "
-                            print(aux_prerre)
                             name_asig = name_asig + aux_prerre
 
-                if not (amayor.name in name_asig):
+                if not(amayor.name in name_asig):
                     suma_creditos = suma_creditos + amayor.creditos
                     creditos_asig.append(amayor.creditos)
                     aux_prerre_si = amayor.name + ", "
@@ -412,21 +411,18 @@ class Matricula(models.Model):
             name_asig = ""
             name_asig_correcto = ""
             for amayor in asignaturas_ciclo_siguiente2:
-                for i in range(len(asig_primera_aux)):
-                    print(amayor.name)
+                for i in range(len(asig_segunda_aux)):
+                    print("eNTRA A HORARIO")
+                    aux_materias_eliminar = self.verificar_horario(ciclo_siguiente2.id, asig_segunda_aux[i][4])
+                    print(aux_materias_eliminar)
+                    if aux_materias_eliminar != None:
+                        name_asig = str(name_asig) + ", " + str(aux_materias_eliminar)
                     for prerre in amayor.prerrequisitos:
-
-                        print(prerre._origin.name)
-                        print(asig_primera_aux[i][2])
-                        if str(prerre._origin.name) == str(asig_primera_aux[i][2]):
-                            aux_materias_eliminar = self.verificar_horario(ciclo_siguiente2.id, asig_primera_aux[i][4])
-                            if aux_materias_eliminar != None:
-                                name_asig = str(name_asig)+", "+str(aux_materias_eliminar)
+                        if str(prerre._origin.name) == str(asig_segunda_aux[i][2]):
                             aux_prerre = amayor.name + ", "
-                            print(aux_prerre)
                             name_asig = name_asig + aux_prerre
 
-                if not (amayor.name in name_asig):
+                if not(amayor.name in name_asig):
                     suma_creditos = suma_creditos + amayor.creditos
                     creditos_asig.append(amayor.creditos)
                     aux_prerre_si = amayor.name + ", "
@@ -500,9 +496,13 @@ class Matricula(models.Model):
         error_horario = []
 
         paralelo_anterior = self.paralelo_ciclo_reprobar
+        
+        print(paralelo_anterior)
 
         paralelo_matricular = self.env['ma.paralelo'].search(
             [('name', '=', paralelo_anterior.name), ('ciclo_id', '=', id_ciclo_matricular)])
+
+        print(paralelo_matricular)
 
         if paralelo_matricular.name == False:
             paralelo_matricular = self.env['ma.paralelo'].search(
@@ -510,37 +510,55 @@ class Matricula(models.Model):
         # Horario Inicio
         for pa_lunes in paralelo_anterior.horario_lunes:
             for pm_lunes in paralelo_matricular.horario_lunes:
+
+                print("asig_id")
+                print(pa_lunes.asignatura_id.id)
+                print("repro_id")
+                print(reprobadas_id)
+                print(pa_lunes.numero_hora)
+                print(pm_lunes.numero_hora )
+                print(pm_lunes.ciclo_id.id)
+                print(id_ciclo_matricular)
+
+
+
                 if pa_lunes.asignatura_id.id == reprobadas_id and pa_lunes.numero_hora == pm_lunes.numero_hora \
-                        and pm_lunes.asignatura_id.id == id_ciclo_matricular:
+                        and pm_lunes.ciclo_id.id == id_ciclo_matricular:
+                    print(pm_lunes.asignatura_id.name)
                     error_horario.append(pm_lunes.asignatura_id.name)
         for pa_martes in paralelo_anterior.horario_martes:
             for pm_martes in paralelo_matricular.horario_martes:
                 if pa_martes.asignatura_id.id == reprobadas_id and pa_martes.numero_hora == pm_martes.numero_hora \
-                        and pm_martes.asignatura_id.id == id_ciclo_matricular:
+                        and pm_martes.ciclo_id.id == id_ciclo_matricular:
                     error_horario.append(pm_martes.asignatura_id.name)
         for pa_miercoles in paralelo_anterior.horario_miercoles:
             for pm_miercoles in paralelo_matricular.horario_miercoles:
                 if pa_miercoles.asignatura_id.id == reprobadas_id and pa_miercoles.numero_hora == pm_miercoles.numero_hora \
-                        and pm_miercoles.asignatura_id.id == id_ciclo_matricular:
+                        and pm_miercoles.ciclo_id.id == id_ciclo_matricular:
                     error_horario.append(pm_miercoles.asignatura_id.name)
         for pa_jueves in paralelo_anterior.horario_jueves:
             for pm_jueves in paralelo_matricular.horario_jueves:
                 if pa_jueves.asignatura_id.id == reprobadas_id and pa_jueves.numero_hora == pm_jueves.numero_hora \
-                        and pm_jueves.asignatura_id.id == id_ciclo_matricular:
+                        and pm_jueves.ciclo_id.id == id_ciclo_matricular:
                     error_horario.append(pm_jueves.asignatura_id.name)
         for pa_viernes in paralelo_anterior.horario_viernes:
             for pm_viernes in paralelo_matricular.horario_viernes:
                 if pa_viernes.asignatura_id.id == reprobadas_id and pa_viernes.numero_hora == pm_viernes.numero_hora \
-                        and pm_viernes.asignatura_id.id == id_ciclo_matricular:
+                        and pm_viernes.ciclo_id.id == id_ciclo_matricular:
                     error_horario.append(pm_viernes.asignatura_id.name)
         # Horario Fin
+        resultantList = ""
+        print("Erorr horariooooooooooooooooooooo")
+        print(error_horario)
         if error_horario:
             resultantList = ""
 
             for element in error_horario:
                 if element not in resultantList:
-                    resultantList = resultantList + ", "
-            return resultantList
+                    resultantList = resultantList + "," + str(element)
+        print("LIustaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        print(resultantList)
+        return resultantList
 
 
 
