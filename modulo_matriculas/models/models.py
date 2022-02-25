@@ -69,7 +69,7 @@ class Matricula(models.Model):
 
 
     def botonmatricular(self):
-
+        carrera_id_ma = self.carrera_id.id
         if self.primera_matricula == False and self.segunda_matricula == False  and self.tercera_matricula == False :
             raise ValidationError("Por favor Ingrese valores")
         #tercera matricula
@@ -210,7 +210,7 @@ class Matricula(models.Model):
             nuevo_ciclo_matricular = ciclo_mayor + 1
             nuevo_ciclo_matricular = "ciclo_" + str(nuevo_ciclo_matricular)
             ciclo_siguiente2 = self.env['ma.ciclo'].search(
-                [('numero_ciclo', '=', nuevo_ciclo_matricular)],limit=1)
+                [('numero_ciclo', '=', nuevo_ciclo_matricular), ('carrera_id', '=',carrera_id_ma)],limit=1)
             num_asig_aux = ciclo_siguiente2.n_asignaturas
             sesentaxciento_materias = round(int(num_asig_aux) * 0.6)
             creditos = 0
@@ -311,7 +311,7 @@ class Matricula(models.Model):
             nuevo_ciclo_matricular = "ciclo_" + str(nuevo_ciclo_matricular)
             print(nuevo_ciclo_matricular)
             ciclo_siguiente2 = self.env['ma.ciclo'].search(
-                [('numero_ciclo', '=', nuevo_ciclo_matricular)], limit=1)
+                [('numero_ciclo', '=', nuevo_ciclo_matricular), ('carrera_id', '=',carrera_id_ma)], limit=1)
             num_asig_aux = ciclo_siguiente2.n_asignaturas
             sesentaxciento_materias = round(int(num_asig_aux) * 0.6)
 
@@ -402,7 +402,7 @@ class Matricula(models.Model):
 
 
             ciclo_siguiente2 = self.env['ma.ciclo'].search(
-                [('id', '=', int(self.ciclo_matricular_especial.id))], limit=1)
+                [('id', '=', int(self.ciclo_matricular_especial.id)), ('carrera_id', '=',carrera_id_ma)], limit=1)
             num_asig_aux = ciclo_siguiente2.n_asignaturas
             sesentaxciento_materias = round(int(num_asig_aux) * 0.6)
 
