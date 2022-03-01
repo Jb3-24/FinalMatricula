@@ -99,7 +99,7 @@ class Matricula(models.Model):
             aux1 = int(aux[0])
             dato2 = [aux1, str(asig_segunda.ciclo_id.name), str(asig_segunda.name), str(asig_segunda.ciclo_id.id), asig_segunda.id]
             asig_segunda_aux.append(dato2)
-            
+
 
 
         asig_segunda_aux_ordenada = sorted(asig_segunda_aux, key=lambda x: x[0])
@@ -131,7 +131,10 @@ class Matricula(models.Model):
             aux = asig_segunda_aux_ordenada_des[i][2]
             materias_mismo_ciclo = materias_mismo_ciclo + str(aux) + ", "
 
-        
+
+        #distinto ciclo
+
+
         for i in range(len(asig_segunda_aux_ordenada_des)):
             if asig_segunda_aux_ordenada_des[i][0] == ciclo_mayor:
                 c += 1
@@ -209,7 +212,20 @@ class Matricula(models.Model):
         else:
             self.asignaturas_tercera = ""
 
+        if len(asig_primera_aux) > 0 and len(asig_segunda_aux) >1:
+            self.ciclo_matricular = ciclo_mayor
+
+        nuevo_ciclo_matricular = "ciclo_" + str(self.ciclo_matricular)
+        ciclo_final = self.env['ma.ciclo'].search(
+            [('numero_ciclo', '=', nuevo_ciclo_matricular), ('carrera_id', '=', carrera_id_ma)], limit=1)
+
+        self.ciclo_matricular = ciclo_final.name
+
         suma_creditos = 0
+
+        creditos_asig = []
+
+        creditos = 0
 
         #En segunda matrícula hay 2 o 1 asignatura y el resto de campos esta vacío.
         if (len(asig_segunda_aux) == 2 or len(asig_segunda_aux) == 1) and len(asig_primera_aux)==0 and len(asig_tercera_aux)==0:
@@ -219,14 +235,13 @@ class Matricula(models.Model):
                 [('numero_ciclo', '=', nuevo_ciclo_matricular), ('carrera_id', '=',carrera_id_ma)],limit=1)
             num_asig_aux = ciclo_siguiente2.n_asignaturas
             sesentaxciento_materias = round(int(num_asig_aux) * 0.6)
-            creditos = 0
+
             if ciclo_siguiente2:
                 creditos_aux = ciclo_siguiente2.creditos
                 creditos = round(creditos_aux * 0.6)
                 asignaturas_ciclo_siguiente2 = self.env['ma.asignatura'].search(
                     [('ciclo_id', '=', ciclo_siguiente2.id)])
 
-            creditos_asig = []
             name_asig = ""
             name_asig_correcto = ""
             for amayor in asignaturas_ciclo_siguiente2:
