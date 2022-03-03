@@ -133,12 +133,13 @@ class Matricula(models.Model):
                 for prerre in asignatura_validar.prerrequisitos:
                     if prerre.id == asig_segunda_aux_ordenada_des[j][4]:
                         s_aux_prerre.append(asig_segunda_aux_ordenada_des[i][2])
-                #s = s + asig_segunda_aux_ordenada_des[i][2] + ","
 
+        print("_a______________a________________-a___________")
+        print(s)
         for i in range(len(asig_segunda_aux)):
             s_aux_prerre.append(self.verificar_horario(ciclo.id, asig_segunda_aux[i][4]))
 
-
+        print(s)
 
         for i in range(len(asig_segunda_aux_ordenada_des)):
             if asig_segunda_aux_ordenada_des[i][0] != ciclo_mayor:
@@ -146,6 +147,12 @@ class Matricula(models.Model):
             aux = asig_segunda_aux_ordenada_des[i][2]
             materias_mismo_ciclo = materias_mismo_ciclo + str(aux) + ", "
 
+        print(s)
+        print(n_asignaturas)
+        for i in range(len(s_aux_prerre)):
+            for j in range(len(asig_segunda_aux_ordenada_des)):
+                if asig_segunda_aux_ordenada_des[j][2] == s_aux_prerre[i]:
+                    asig_segunda_aux_ordenada_des[j] = ["", "", "", "", ""]
 
         #distinto ciclo
         for j in range(len(ciclos_registados)):
@@ -155,8 +162,11 @@ class Matricula(models.Model):
                     if c > n_asignaturas:
                         asig_segunda_aux_ordenada_des[i] = ["","","","",""]
             c = 0
-
-
+        print(s)
+        for i in range(len(asig_segunda_aux_ordenada_des)):
+            if asig_segunda_aux_ordenada_des[i][0] != "":
+                s = s + asig_segunda_aux_ordenada_des[i][2] + ","
+        print(s)
         for i in range(len(s_aux_prerre)):
             print(s_aux_prerre[i])
             s = s.replace(s_aux_prerre[i]+",", "")
