@@ -94,10 +94,12 @@ class Matricula(models.Model):
         #segunda matricula
         asig_segunda_aux = []
         ciclos_registados = []
-
+        bool_aux = False
         for asig_segunda in self.asignaturas_reprobadas:
             aux = [int(s) for s in re.findall(r'-?\d\d*', str(asig_segunda.ciclo_id.name))]
             aux1 = int(aux[0])
+            if aux1 == 10:
+                bool_aux = True
             if aux1 not in ciclos_registados:
                 ciclos_registados.append(aux1)
             dato2 = [aux1, str(asig_segunda.ciclo_id.name), str(asig_segunda.name), str(asig_segunda.ciclo_id.id), asig_segunda.id]
@@ -362,7 +364,7 @@ class Matricula(models.Model):
             self.asignaturas_primera = materias_add + ","
             self.ciclo_matricular = ciclo_siguiente2.name
 
-            if ciclo_siguiente2.numero_ciclo == "ciclo_10":
+            if bool_aux:
                 self.asignaturas_primera = ""
 
 
