@@ -241,19 +241,26 @@ class Matricula(models.Model):
         if self.asignaturas_pendientes:
             self.ciclo_matricular = ciclo_mayor1
 
-        if self.asignaturas_reprobadas_tercera:
-            print("Hay tercera matricula")
-            self.asignaturas_segunda = ""
-            self.asignaturas_primera = ""
-        else:
-            self.asignaturas_tercera = ""
-
         if len(asig_primera_aux) > 0 and len(asig_segunda_aux) >1:
             self.ciclo_matricular = ciclo_mayor
 
         nuevo_ciclo_matricular = "ciclo_" + str(self.ciclo_matricular)
         ciclo_final = self.env['ma.ciclo'].search(
             [('numero_ciclo', '=', nuevo_ciclo_matricular), ('carrera_id', '=', carrera_id_ma)], limit=1)
+
+        print(ciclo_final.name)
+        if self.asignaturas_reprobadas_tercera:
+            print("Hay tercera matricula")
+            self.asignaturas_segunda = ""
+            self.asignaturas_primera = ""
+            print("ciclo_" + str(asig_tercera_aux_ordenada[0][0]))
+            nuevo_ciclo_matricular = "ciclo_" + str(asig_tercera_aux_ordenada[0][0])
+            ciclo_final = self.env['ma.ciclo'].search(
+                [('numero_ciclo', '=', nuevo_ciclo_matricular), ('carrera_id', '=', carrera_id_ma)], limit=1)
+        else:
+            self.asignaturas_tercera = ""
+
+        print(ciclo_final.name)
 
         self.ciclo_matricular = ciclo_final.name
 
