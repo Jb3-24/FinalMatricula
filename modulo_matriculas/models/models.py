@@ -135,11 +135,15 @@ class Matricula(models.Model):
                         s_aux_prerre.append(asig_segunda_aux_ordenada_des[i][2])
 
         print("_a______________a________________-a___________")
-        print(s)
+        print(s_aux_prerre)
+        aux_metodo = ""
         for i in range(len(asig_segunda_aux)):
-            s_aux_prerre.append(self.verificar_horario(ciclo.id, asig_segunda_aux[i][4]))
-
-        print(s)
+            aux_metodo =  aux_metodo + self.verificar_horario(ciclo.id, asig_segunda_aux[i][4]) + ","
+            print(aux_metodo)
+        aux_metodo = aux_metodo.replace(",", "")
+        s_aux_prerre.append(str(aux_metodo))
+        print("_Das___________________________Da_________________Dass")
+        print(s_aux_prerre)
 
         for i in range(len(asig_segunda_aux_ordenada_des)):
             if asig_segunda_aux_ordenada_des[i][0] != ciclo_mayor:
@@ -147,10 +151,13 @@ class Matricula(models.Model):
             aux = asig_segunda_aux_ordenada_des[i][2]
             materias_mismo_ciclo = materias_mismo_ciclo + str(aux) + ", "
 
-        print(s)
+
         print(n_asignaturas)
         for i in range(len(s_aux_prerre)):
             for j in range(len(asig_segunda_aux_ordenada_des)):
+                print("Epa")
+                print(asig_segunda_aux_ordenada_des[j][2])
+                print(s_aux_prerre[i])
                 if asig_segunda_aux_ordenada_des[j][2] == s_aux_prerre[i]:
                     asig_segunda_aux_ordenada_des[j] = ["", "", "", "", ""]
 
@@ -162,14 +169,14 @@ class Matricula(models.Model):
                     if c > n_asignaturas:
                         asig_segunda_aux_ordenada_des[i] = ["","","","",""]
             c = 0
-        print(s)
+        print(asig_segunda_aux_ordenada_des)
         for i in range(len(asig_segunda_aux_ordenada_des)):
             if asig_segunda_aux_ordenada_des[i][0] != "":
-                s = s + asig_segunda_aux_ordenada_des[i][2] + ","
+                s = s + asig_segunda_aux_ordenada_des[i][2] + ", "
         print(s)
-        for i in range(len(s_aux_prerre)):
-            print(s_aux_prerre[i])
-            s = s.replace(s_aux_prerre[i]+",", "")
+        #for i in range(len(s_aux_prerre)):
+        #    print(s_aux_prerre[i])
+        #    s = s.replace(s_aux_prerre[i]+",", "")
         if diferentes_ciclo:
             self.asignaturas_segunda = s
         else:
@@ -256,7 +263,13 @@ class Matricula(models.Model):
 
         #En segunda matrícula hay 2 o 1 asignatura y el resto de campos esta vacío.
         if (len(asig_segunda_aux) == 2 or len(asig_segunda_aux) == 1) and len(asig_primera_aux)==0 and len(asig_tercera_aux)==0:
-            nuevo_ciclo_matricular = ciclo_mayor + 1
+
+            if ciclo_mayor >= 10:
+                nuevo_ciclo_matricular = 10
+            else:
+                nuevo_ciclo_matricular = ciclo_mayor + 1
+
+
             nuevo_ciclo_matricular = "ciclo_" + str(nuevo_ciclo_matricular)
             ciclo_siguiente2 = self.env['ma.ciclo'].search(
                 [('numero_ciclo', '=', nuevo_ciclo_matricular), ('carrera_id', '=',carrera_id_ma)],limit=1)
@@ -348,6 +361,9 @@ class Matricula(models.Model):
             materias_add = materias_add.replace(',,','')
             self.asignaturas_primera = materias_add + ","
             self.ciclo_matricular = ciclo_siguiente2.name
+
+            if ciclo_siguiente2.numero_ciclo == "ciclo_10":
+                self.asignaturas_primera = ""
 
 
         #En segunda matrícula hay 1 y en asignaturas pendientes también hay 1.
@@ -556,9 +572,12 @@ class Matricula(models.Model):
             paralelo_matricular = self.env['ma.paralelo'].search(
                 [('ciclo_id', '=', id_ciclo_matricular)], limit=1)
         # Horario Inicio
+        print("LLega 1")
+        print(paralelo_anterior.horario_lunes)
+        print(paralelo_matricular.horario_lunes)
         for pa_lunes in paralelo_anterior.horario_lunes:
             for pm_lunes in paralelo_matricular.horario_lunes:
-
+                print("LLega 2")
                 print("asig_id")
                 print(pa_lunes.asignatura_id.id)
                 print("repro_id")
@@ -567,7 +586,6 @@ class Matricula(models.Model):
                 print(pm_lunes.numero_hora )
                 print(pm_lunes.ciclo_id.id)
                 print(id_ciclo_matricular)
-
 
 
                 if pa_lunes.asignatura_id.id == reprobadas_id and pa_lunes.numero_hora == pm_lunes.numero_hora \
