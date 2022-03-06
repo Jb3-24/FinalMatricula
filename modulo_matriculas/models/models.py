@@ -71,6 +71,7 @@ class Matricula(models.Model):
     asignaturas_segunda = fields.Char(string="Materias matricular 2")
     asignaturas_primera = fields.Char(string="Materias matricular 1")
     ciclo_matricular = fields.Char(string="Ciclo en el que se va a matricular")
+    ciclo_matricular_especial2 = fields.Char(string="Ciclo especial")
 
     def eliminar_matriculas_diarias(self):
         matriculas = self.env["ma.matricula"].search([])
@@ -186,7 +187,25 @@ class Matricula(models.Model):
         #    print(s_aux_prerre[i])
         #    s = s.replace(s_aux_prerre[i]+",", "")
         if diferentes_ciclo:
+            ciclos_agregar = []
+            materias = s.split(sep=',')
+            print("##############################################################################3")
+            print(materias)
+            for m in materias:
+                print(m)
+                aux_asig = m.strip()
+                materia = self.env['ma.asignatura'].search(
+                    [('name', '=', aux_asig), ('carrera_id', '=' ,carrera_id_ma)], limit=1)
+                if not(materia.ciclo_id.name in ciclos_agregar) and materia.ciclo_id.name != False:
+                    print(materia.name)
+                    print(materia.ciclo_id.name)
+                    ciclos_agregar.append(materia.ciclo_id.name)
+            especial = ""
+            for i in range(len(ciclos_agregar)):
+                especial = especial + str(ciclos_agregar[i]) + ","
             self.asignaturas_segunda = s
+            self.ciclo_matricular_especial2 = especial
+
         else:
             self.asignaturas_segunda = materias_mismo_ciclo
 
