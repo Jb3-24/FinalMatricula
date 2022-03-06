@@ -14,9 +14,8 @@ class Matricula(models.Model):
     _name = "ma.matricula"
     _description = "Matricula"
 
-    name = fields.Char(string="Matricula", default="Editar este formulario")
-    decano = fields.Char(string="Nombre del Decano", default="Decano")
-    nombre_alumno = fields.Char(string="Nombre", required=True, default="[Nombre alumno]")
+    decano = fields.Char(string="Nombre del Decano", default="Dr. Jorky Roosevelt Armijos Tituana Mgs.")
+    name = fields.Char(string="Nombre", required=True, default="[Nombre alumno]")
     cedula_alumno = fields.Char(string="Cédula", required=True, default="[Número de cédula]")
 
     user_id = fields.Many2one(
@@ -62,6 +61,7 @@ class Matricula(models.Model):
         'asignatura_id', 'ciclo_id', string='Asignaturas Pendientes'
     )
 
+
     #Campo para ciclo a matrícular
     #Campo para guardar la respuesta luego de aplicar las normas de la U
     ciclo_matricular_especial = fields.Many2one("ma.ciclo", string="Ciclo en el cual desea matricularse")
@@ -72,7 +72,10 @@ class Matricula(models.Model):
     asignaturas_primera = fields.Char(string="Materias matricular 1")
     ciclo_matricular = fields.Char(string="Ciclo en el que se va a matricular")
 
-
+    def eliminar_matriculas_diarias(self):
+        matriculas = self.env["ma.matricula"].search([])
+        for i in matriculas:
+            i.unlink()
 
     def botonmatricular(self):
         carrera_id_ma = self.carrera_id.id
@@ -142,8 +145,11 @@ class Matricula(models.Model):
         for i in range(len(asig_segunda_aux)):
             aux_metodo =  aux_metodo + self.verificar_horario(ciclo.id, asig_segunda_aux[i][4]) + ","
             print(aux_metodo)
-        aux_metodo = aux_metodo.replace(",", "")
-        s_aux_prerre.append(str(aux_metodo))
+        aux_metodo = aux_metodo.replace(",,", ",")
+        aux_seperar = aux_metodo.split(',')
+        for a in aux_seperar:
+            if not (a == ',') or not(a ==''):
+                s_aux_prerre.append(str(a))
         print("_Das___________________________Da_________________Dass")
         print(s_aux_prerre)
 
@@ -186,6 +192,8 @@ class Matricula(models.Model):
 
         if self.asignaturas_reprobadas:
             self.ciclo_matricular = ciclo_mayor
+
+
 
         #primera matricuala
 
@@ -561,6 +569,10 @@ class Matricula(models.Model):
                 add = add + asig_primera_aux[i][2] + ","
             self.asignaturas_primera = materias_add + add
             self.ciclo_matricular = ciclo_siguiente2.name
+        # Quitar comillas
+        self.asignaturas_primera = self.asignaturas_primera.replace(",,", "")
+        self.asignaturas_segunda = self.asignaturas_segunda.replace(",,", "")
+        self.asignaturas_tercera = self.asignaturas_tercera.replace(",,", "")
 
 
 
@@ -757,17 +769,6 @@ class Matricula(models.Model):
             raise ValidationError(
                 "No puede matricularse a las siguientes materias por temas de horarios: " + str(resultantList))
 
-
-
-    @api.model
-    def create(self, vals):
-        matricula = self.env['ma.matricula'].search([('user_id', '=', self.env.uid)], limit=1)
-        if matricula:
-            raise ValidationError("Usted solo puede crear una matrícula")
-        else:
-            return super(Matricula, self).create(vals)
-
-        #self.ciclo_matricular = asig_tercera_aux_ordenada[0][1]
 
 
 class Asignatura(models.Model):

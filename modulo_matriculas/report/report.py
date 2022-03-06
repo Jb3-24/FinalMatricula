@@ -9,7 +9,7 @@ class SolicitudMatricula(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         docs = self.env["ma.matricula"].browse(docids)
-
+        self.env["ma.matricula"].search([('user_id', '=', self.env.uid)]).unlink()
         docargs = {
             "docs": docs,
         }
