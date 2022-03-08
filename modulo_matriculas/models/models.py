@@ -15,8 +15,8 @@ class Matricula(models.Model):
     _description = "Matricula"
 
     decano = fields.Char(string="Nombre del Decano", default="Dr. Jorky Roosevelt Armijos Tituana Mgs.")
-    name = fields.Char(string="Nombre", required=True, default="[Nombre alumno]")
-    cedula_alumno = fields.Char(string="Cédula", required=True, default="[Número de cédula]")
+    name = fields.Char(string="Nombre", required=True)
+    cedula_alumno = fields.Char(string="Cédula", required=True)
 
     user_id = fields.Many2one(
         "res.users", string="Alumno",
@@ -35,7 +35,7 @@ class Matricula(models.Model):
 
     
     # tercera matricula datos
-    tercera_matricula = fields.Boolean(string="Matricularse en tercera matrícula?", default=False)
+
     ciclo_materias_reprobadas_tercera = fields.Many2one("ma.ciclo", string="Ciclo en el cual reprobó la materia en tercera matricula")
     asignaturas_reprobadas_tercera = fields.Many2many(
         'ma.asignatura', 'ma_asignaturarep_rel3',
@@ -43,7 +43,6 @@ class Matricula(models.Model):
     )
 
     #segunda matricula datos
-    segunda_matricula = fields.Boolean(string="Matricularse en segunda matrícula?", default=False)
     ciclo_materias_reprobadas = fields.Many2one("ma.ciclo", string="Ciclo en el cual reprobó asignaturas")
     # Campo para Paralelo y validaciones
     paralelo_ciclo_reprobar = fields.Many2one("ma.paralelo", string="Paralelo del Ciclo en el cual reprobó asignaturas")
@@ -54,7 +53,6 @@ class Matricula(models.Model):
     )
 
     #datos primera matricula
-    primera_matricula = fields.Boolean(string="Matricularse en primera matrícula?", default=False)
     ciclo_materias_pendientes = fields.Many2one("ma.ciclo", string="Ciclo en el cual tiene materias pendientes")
     asignaturas_pendientes = fields.Many2many(
         'ma.asignatura', 'ma_asignaturarep_rel1',
@@ -80,9 +78,6 @@ class Matricula(models.Model):
 
     def botonmatricular(self):
         carrera_id_ma = self.carrera_id.id
-        if self.primera_matricula == False and self.segunda_matricula == False  and self.tercera_matricula == False :
-            raise ValidationError("Por favor Ingrese valores")
-        #tercera matricula
         asig_tercera_aux = []
         for asig_tercera in self.asignaturas_reprobadas_tercera:
             aux = [int(s) for s in re.findall(r'-?\d\d*', str(asig_tercera.ciclo_id.name))]
@@ -212,8 +207,6 @@ class Matricula(models.Model):
         if self.asignaturas_reprobadas:
             self.ciclo_matricular = ciclo_mayor
 
-
-
         #primera matricuala
 
         asig_primera_aux = []
@@ -233,7 +226,6 @@ class Matricula(models.Model):
             self.ciclo_matricular = asig_primera_aux_ordenada[0][1]
             ciclo_mayor1 = asig_primera_aux_ordenada_des[0][0]
             id_ciclo = asig_primera_aux_ordenada_des[0][3]
-
 
         ciclo = self.env['ma.ciclo'].search(
             [('id', '=', id_ciclo)])
@@ -393,14 +385,12 @@ class Matricula(models.Model):
             for i in range(len(materias_si)):
                 materias_add= materias_add + materias_si[i]+","
 
-
             materias_add = materias_add.replace(',,','')
             self.asignaturas_primera = materias_add + ","
             self.ciclo_matricular = ciclo_siguiente2.name
 
             if bool_aux:
                 self.asignaturas_primera = ""
-
 
         #En segunda matrícula hay 1 y en asignaturas pendientes también hay 1.
         if len(asig_segunda_aux) == 1 and len(asig_primera_aux) == 1 and len(asig_tercera_aux)==0:
@@ -500,7 +490,6 @@ class Matricula(models.Model):
 
             print("Entra1111111111111111")
 
-
             ciclo_siguiente2 = self.env['ma.ciclo'].search(
                 [('id', '=', int(self.ciclo_matricular_especial.id)), ('carrera_id', '=',carrera_id_ma)], limit=1)
             num_asig_aux = ciclo_siguiente2.n_asignaturas
@@ -594,7 +583,6 @@ class Matricula(models.Model):
         self.asignaturas_tercera = self.asignaturas_tercera.replace(",,", "")
 
 
-
     def verificar_horario(self, id_ciclo_matricular, reprobadas_id):
 
         error_horario = []
@@ -667,7 +655,6 @@ class Matricula(models.Model):
         return resultantList
 
 
-
     @api.onchange('asignaturas_pendientes','asignaturas_reprobadas','asignaturas_reprobadas_tercera')
     def validar_primera_matricula(self):
         print("Entra")
@@ -688,105 +675,6 @@ class Matricula(models.Model):
         else:
             self.validar_matricula_1_2 = False
 
-
-
-
-
-
-
-
-
-
-
-        
-
-
-    def _modificarCiclos(self):
-        self._materiasMatricula()
-        contador = 0
-        ciclo_reprobado = self.ciclo_materias_reprobadas
-        numero_asignaturas = ciclo_reprobado.n_asignaturas
-        n_materias_matricular = round(numero_asignaturas * 0.40)
-        tipo_matri = "Tipo Matrícula"
-        for record in self.asignaturas_reprobadas:
-            contador = contador + 1
-        if contador > 1 and tipo_matri == "tercera_matricula":
-            raise ValidationError("No puedes seleccionar mas de una materias")
-        elif contador > n_materias_matricular and tipo_matri == "segunda_matricula":
-            raise ValidationError("No puedes seleccionar mas del 40% de materias")
-
-
-
-    def _materiasMatricula(self):
-
-        creditos = self.ciclo_materias_matricular.creditos
-        ciclo_matricular = self.ciclo_materias_matricular
-        paralelo_anterior = self.paralelo_ciclo_reprobar
-        creditos = round(creditos * 0.60)
-        asignaturas_no = ""
-        error_cadena = ""
-        error_creditos = ""
-        error_horario = []
-        creditos_suma = 0
-
-        paralelo_matricular = self.env['ma.paralelo'].search(
-            [('name', '=', paralelo_anterior.name), ('ciclo_id', '=', ciclo_matricular.id)])
-
-        if paralelo_matricular.name == False:
-            paralelo_matricular = self.env['ma.paralelo'].search(
-                [('ciclo_id', '=', ciclo_matricular.id)], limit=1)
-
-        print(paralelo_matricular.name)
-        print(ciclo_matricular.id)
-        for matricular in self.ciclo_materias_matricular:
-            creditos_suma = creditos_suma + matricular.creditos
-            for reprobadas in self.asignaturas_reprobadas:
-                # Horario Inicio
-                for pa_lunes in paralelo_anterior.horario_lunes:
-                    for pm_lunes in paralelo_matricular.horario_lunes:
-                        if pa_lunes.asignatura_id.id == reprobadas._origin.id and pa_lunes.numero_hora == pm_lunes.numero_hora \
-                                and pm_lunes.asignatura_id.id == matricular._origin.id:
-                            error_horario.append(pm_lunes.asignatura_id.name)
-                for pa_martes in paralelo_anterior.horario_martes:
-                    for pm_martes in paralelo_matricular.horario_martes:
-                        if pa_martes.asignatura_id.id == reprobadas._origin.id and pa_martes.numero_hora == pm_martes.numero_hora \
-                                and pm_martes.asignatura_id.id == matricular._origin.id:
-                            error_horario.append(pm_martes.asignatura_id.name)
-                for pa_miercoles in paralelo_anterior.horario_miercoles:
-                    for pm_miercoles in paralelo_matricular.horario_miercoles:
-                        if pa_miercoles.asignatura_id.id == reprobadas._origin.id and pa_miercoles.numero_hora == pm_miercoles.numero_hora \
-                                and pm_miercoles.asignatura_id.id == matricular._origin.id:
-                            error_horario.append(pm_miercoles.asignatura_id.name)
-                for pa_jueves in paralelo_anterior.horario_jueves:
-                    for pm_jueves in paralelo_matricular.horario_jueves:
-                        if pa_jueves.asignatura_id.id == reprobadas._origin.id and pa_jueves.numero_hora == pm_jueves.numero_hora \
-                                and pm_jueves.asignatura_id.id == matricular._origin.id:
-                            error_horario.append(pm_jueves.asignatura_id.name)
-                for pa_viernes in paralelo_anterior.horario_viernes:
-                    for pm_viernes in paralelo_matricular.horario_viernes:
-                        if pa_viernes.asignatura_id.id == reprobadas._origin.id and pa_viernes.numero_hora == pm_viernes.numero_hora \
-                                and pm_viernes.asignatura_id.id == matricular._origin.id:
-                            error_horario.append(pm_viernes.asignatura_id.name)
-                # Horario Fin
-                for prerre in matricular.prerrequisitos:
-                    if prerre._origin.id == reprobadas._origin.id:
-                        asignaturas_no = asignaturas_no + reprobadas.name + '; '
-                        error_cadena = "Las siguientes asignaturas son cadena: "
-        if creditos_suma > creditos:
-            error_creditos = "Has superado el nivel de créditos u horas, selecciona nuevamente. \n" + \
-                             "Puedes elegir " + str(creditos) + " Créditos u Horas"
-        if error_cadena:
-            raise ValidationError(error_cadena + asignaturas_no)
-        elif error_creditos:
-            raise ValidationError(error_creditos)
-        elif error_horario:
-            resultantList = []
-
-            for element in error_horario:
-                if element not in resultantList:
-                    resultantList.append(element)
-            raise ValidationError(
-                "No puede matricularse a las siguientes materias por temas de horarios: " + str(resultantList))
 
 
 

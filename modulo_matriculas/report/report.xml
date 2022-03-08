@@ -22,12 +22,4 @@
             name="modulo_matriculas.report_solicitud_matricula"
             print_report_name="'Solicitud_%s' % (object.name)"/>
 
-    <report id="modulo_matriculas.action_report_solicitud_valores"
-            string="Generar Solicitud Valores Pendientes"
-            model="ma.matricula"
-            report_type="qweb-pdf"
-            paperformat="modulo_matriculas.paperformat_portrait_a4"
-            groups = "modulo_matriculas.res_groups_administrador,modulo_matriculas.res_groups_alumnos"
-            name="modulo_matriculas.report_solicitud_valores_pendientes"
-            print_report_name="'Solicitud_ValoresPendientes_%s' % (object.user_id.name)"/>
 </odoo>

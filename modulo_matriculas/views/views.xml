@@ -1,40 +1,8 @@
 <odoo>
     <data>
 
-        <!--VISTAS ALUMNO-->
-        <!--VISTAS ALUMNO FORM-->
         <!--Vista Form Matricula Alumno-->
-        <!--
-        <record id="view_form_matricula" model="ir.ui.view">
-            <field name="name">view.form.ma.matricula</field>
-            <field name="model">ma.matricula</field>
-            <field name="arch" type="xml">
-                <form  create="false">
-                    <sheet>
-                            <group>
-                                <field name="user_id" invisible="1"/>
-                                <field name="carrera_id" />
-                                <field name="tipo_matricula"/>
-                            </group>
-                            <group>
-                                <field name="ciclo_materias_reprobadas" domain="[('carrera_id', '=', carrera_id)]"/>
-                                <field name="paralelo_ciclo_reprobar" domain="[('ciclo_id', '=', ciclo_materias_reprobadas)]"/>
-                                <field name="asignaturas_reprobadas" domain="[('ciclo_id', '=', ciclo_materias_reprobadas)]"/>
-                            </group>
-                            <group>
-                            <field name="matricular_mismo_ciclo"/>
-                            </group>
-                            <group>
-                                <field name="ciclo_materias_matricular" domain="[('carrera_id', '=', carrera_id)]" attrs="{'invisible': ['|',('tipo_matricula', '=', 'tercera_matricula'),('matricular_mismo_ciclo', '=', True)]}"/>
-                                <field name="asignaturas_matricular" domain="[('ciclo_id', '=', ciclo_materias_matricular)]" attrs="{'invisible': ['|',('tipo_matricula', '=', 'tercera_matricula'),('matricular_mismo_ciclo', '=', True)]}"/>
-                            </group>
-                        <notebook>
-                        </notebook>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-        -->
+
 
         <record id="view_form_matricula" model="ir.ui.view">
             <field name="name">view.form.ma.matricula</field>
@@ -44,55 +12,82 @@
                     <sheet>
                             <group>
                                 <field name ="decano" groups="modulo_matriculas.res_groups_administrador"/>
-                                <field name ="name"/>
-                                <field name ="cedula_alumno"/>
+                                <field name ="name" placeholder="Ingrese su nombre"/>
+                                <field name ="cedula_alumno" placeholder="Ingrese su nro. de cédula"/>
                                 <field name ="periodo_id"/>
-
-                                <field name="carrera_id" />
+                                <field name="carrera_id"/>
                             </group>
-
-                            <group>
-                                <field name ="tercera_matricula"/>
-                            </group>
+                        <hr/>
+                        <notebook>
+                            <page string="Datos de Tercera Matrícula">
 
                             <group>
-                                <field name ="ciclo_materias_reprobadas_tercera" domain="[('carrera_id', '=', carrera_id)]" attrs="{'invisible': [('tercera_matricula', '=', False)]}"/>
-                                <field name="asignaturas_reprobadas_tercera" domain="[('ciclo_id', '=', ciclo_materias_reprobadas_tercera)]" attrs="{'invisible': [('tercera_matricula', '=', False)]}"/>
+                                <field name ="ciclo_materias_reprobadas_tercera" domain="[('carrera_id', '=', carrera_id)]"/>
                             </group>
-                            <group>
-                                <field name ="segunda_matricula"/>
+                                <br></br>
+
+                                <group>
+
+                                <field name="asignaturas_reprobadas_tercera" domain="[('ciclo_id', '=', ciclo_materias_reprobadas_tercera)]"/>
                             </group>
+                            </page>
+                            <page string="Datos de Segunda Matrícula">
+
 
                             <group>
-                                <field name="ciclo_materias_reprobadas" domain="[('carrera_id', '=', carrera_id)]" attrs="{'invisible': [('segunda_matricula', '=', False)]}"/>
-                                <field name="paralelo_ciclo_reprobar" domain="[('ciclo_id', '=', ciclo_materias_reprobadas)]" attrs="{'invisible': [('segunda_matricula', '=', False)]}"/>
-                                <field name="asignaturas_reprobadas" domain="[('ciclo_id', '=', ciclo_materias_reprobadas)]" attrs="{'invisible': [('segunda_matricula', '=', False)]}"/>
+                                <field name="ciclo_materias_reprobadas" domain="[('carrera_id', '=', carrera_id)]"/>
+                            </group>
+                                <br></br>
+                            <group>
+                                <field name="paralelo_ciclo_reprobar" domain="[('ciclo_id', '=', ciclo_materias_reprobadas)]"/>
+                            </group>
+                                <br></br>
+                            <group>
+                                <field name="asignaturas_reprobadas" domain="[('ciclo_id', '=', ciclo_materias_reprobadas)]"/>
                             </group>
 
+                            </page>
+                            <page string="Datos de Primera Matrícula">
+
                             <group>
-                                <field name ="primera_matricula"/>
+                                <field name ="ciclo_materias_pendientes" domain="[('carrera_id', '=', carrera_id)]" />
                             </group>
+                                <br></br>
                             <group>
-                                <field name ="ciclo_materias_pendientes" domain="[('carrera_id', '=', carrera_id)]" attrs="{'invisible': [('primera_matricula', '=', False)]}"/>
-                                <field name="asignaturas_pendientes" domain="[('ciclo_id', '=', ciclo_materias_pendientes)]" attrs="{'invisible': [('primera_matricula', '=', False)]}"/>
+                                <field name="asignaturas_pendientes" domain="[('ciclo_id', '=', ciclo_materias_pendientes)]"/>
+                            </group>
+                                <br></br>
+                            <group>
                                 <field name="validar_matricula_1_2" invisible="1"/>
+                            </group>
+                                <br></br>
+                            <group>
                                 <field name ="ciclo_matricular_especial" domain="[('carrera_id', '=', carrera_id)]"  attrs="{'invisible': [('validar_matricula_1_2', '=', False)]}"/>
                             </group>
-                            <group>
+                            </page>
+
+                        </notebook>
+                            <div class="d-flex justify-content-center">
                                 <button style="float: center;"
-                                    string="Obtener resultados matrícula"
+                                    string="Simular Matrícula"
                                     type="object"
                                     name="botonmatricular"
-                                    class="btn btn-primary"/>
-                            </group>
+                                    class="btn btn-primary btn-lg oe_highlight"/>
+                            </div>
+                        <hr/>
+                        <br></br>
 
                             <group>
-
                                 <field name="ciclo_matricular" readonly="1"/>
+                            </group>
+                            <group>
                                 <field name="asignaturas_tercera" readonly="1"/>
+                            </group>
+                            <group>
                                 <field name="asignaturas_segunda" readonly="1"/>
+                            </group>
+                            <group>
                                 <field name="asignaturas_primera" readonly="1"/>
-
                             </group>
                     </sheet>
                 </form>
