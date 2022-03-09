@@ -402,11 +402,16 @@ class Matricula(models.Model):
             print(nuevo_ciclo_matricular)
             ciclo_siguiente2 = self.env['ma.ciclo'].search(
                 [('numero_ciclo', '=', nuevo_ciclo_matricular), ('carrera_id', '=',carrera_id_ma)], limit=1)
+
+            if ciclo_siguiente2:
+                creditos_aux = ciclo_siguiente2.creditos
+                creditos = round(creditos_aux * 0.6)
+                asignaturas_ciclo_siguiente2 = self.env['ma.asignatura'].search(
+                    [('ciclo_id', '=', ciclo_siguiente2.id)])
+
             num_asig_aux = ciclo_siguiente2.n_asignaturas
             sesentaxciento_materias = round(int(num_asig_aux) * 0.6)
 
-            asignaturas_ciclo_siguiente2 = self.env['ma.asignatura'].search(
-                [('ciclo_id', '=', ciclo_siguiente2.id)])
             name_asig = ""
             name_asig_correcto = ""
             for amayor in asignaturas_ciclo_siguiente2:
@@ -441,7 +446,8 @@ class Matricula(models.Model):
             materias_add = ""
             print(sesentaxciento_materias)
             for i in range(3):
-
+                print(suma_creditos)
+                print(creditos)
                 if suma_creditos > creditos:
                     aux = len(materias_si)
                     aux_menor = 500
