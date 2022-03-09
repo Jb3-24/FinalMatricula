@@ -424,7 +424,15 @@ class Matricula(models.Model):
             name_asig_correcto = ""
 
             aux_materias_eliminar2 = self.verificar_horario_uni(ciclo_anterior2.id, asig_segunda_aux[0][4], asig_primera_aux[0][4])
+            if aux_materias_eliminar2 != None:
+                print("WOoooooooooooooooooooooooooooooooo")
+                print(aux_materias_eliminar2)
+                self.asignaturas_segunda = ""
 
+                name_asig = name_asig + aux_materias_eliminar2
+                primera_puede = asig_primera_aux[0][2]
+
+            print(asig_primera_aux[0][4])
             aux_materias_eliminar3 = self.verificar_horario(ciclo_siguiente2.id, asig_primera_aux[0][4])
             print("Eloooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo")
             print(aux_materias_eliminar3)
@@ -442,14 +450,6 @@ class Matricula(models.Model):
                         if str(prerre._origin.name) == str(asig_segunda_aux[i][2]):
                             aux_prerre = amayor.name + ", "
                             name_asig = name_asig + aux_prerre
-
-                if aux_materias_eliminar2 != None:
-                    print("WOoooooooooooooooooooooooooooooooo")
-                    print(aux_materias_eliminar2)
-                    self.asignaturas_segunda = ""
-
-                    name_asig = name_asig + aux_materias_eliminar2
-                    primera_puede = asig_primera_aux[0][2]
 
                 if not(amayor.name in name_asig):
                     suma_creditos = suma_creditos + amayor.creditos
