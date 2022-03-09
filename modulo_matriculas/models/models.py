@@ -427,9 +427,13 @@ class Matricula(models.Model):
             if aux_materias_eliminar2 != None:
                 print("WOoooooooooooooooooooooooooooooooo")
                 print(aux_materias_eliminar2)
+                aux_materias_eliminar2 = aux_materias_eliminar2.replace(",","")
                 materia_choca = self.asignaturas_segunda
-
-                materia_choca = materia_choca.replace(aux_materias_eliminar2, "")
+                print(materia_choca)
+                if materia_choca:
+                    materia_choca = materia_choca.replace(aux_materias_eliminar2, "")
+                    print(materia_choca)
+                print(materia_choca)
                 self.asignaturas_segunda = materia_choca
 
                 name_asig = name_asig + aux_materias_eliminar2
