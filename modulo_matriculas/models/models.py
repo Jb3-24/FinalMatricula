@@ -90,6 +90,16 @@ class Matricula(models.Model):
             self.ciclo_matricular = asig_tercera_aux_ordenada[0][1]
             self.asignaturas_tercera = asig_tercera_aux_ordenada[0][2]
 
+        #llenar primera matricula
+        asig_primera_aux = []
+
+        for asig_primera in self.asignaturas_pendientes:
+            aux = [int(s) for s in re.findall(r'-?\d\d*', str(asig_primera.ciclo_id.name))]
+            aux1 = int(aux[0])
+            dato3 = [aux1, str(asig_primera.ciclo_id.name), str(asig_primera.name), str(asig_primera.ciclo_id.id),
+                     asig_primera.id]
+            asig_primera_aux.append(dato3)
+
         #segunda matricula
         asig_segunda_aux = []
         ciclos_registados = []
@@ -112,6 +122,20 @@ class Matricula(models.Model):
             self.ciclo_matricular = asig_segunda_aux_ordenada[0][1]
             ciclo_mayor = asig_segunda_aux_ordenada_des[0][0]
             id_ciclo = asig_segunda_aux_ordenada_des[0][3]
+
+        # ciclo anterior
+        anterior_ciclo_matricular = ciclo_mayor - 1
+        anterior_ciclo_matricular = "ciclo_" + str(anterior_ciclo_matricular)
+        print(anterior_ciclo_matricular)
+        ciclo_anterior2 = self.env['ma.ciclo'].search(
+            [('numero_ciclo', '=', anterior_ciclo_matricular), ('carrera_id', '=', carrera_id_ma)], limit=1)
+
+        # ciclo siguiente
+        nuevo_ciclo_matricular = ciclo_mayor + 1
+        nuevo_ciclo_matricular = "ciclo_" + str(nuevo_ciclo_matricular)
+        print(nuevo_ciclo_matricular)
+        ciclo_siguiente2 = self.env['ma.ciclo'].search(
+            [('numero_ciclo', '=', nuevo_ciclo_matricular), ('carrera_id', '=', carrera_id_ma)], limit=1)
 
         ciclo = self.env['ma.ciclo'].search(
             [('id', '=', id_ciclo)])
@@ -138,6 +162,40 @@ class Matricula(models.Model):
         print("_a______________a________________-a___________")
         print(s_aux_prerre)
         aux_metodo = ""
+
+        #este codigo se agregó
+        aux_materias_eliminar2 = None
+        if len(asig_primera_aux)>=1:
+            aux_materias_eliminar2 = self.verificar_horario_uni(ciclo_anterior2.id, asig_segunda_aux[0][4],
+                                                            asig_primera_aux[0][4])
+        if aux_materias_eliminar2 != None:
+            print("WOoooooooooooooooooooooooooooooooo")
+            print(aux_materias_eliminar2)
+            aux_materias_eliminar2 = aux_materias_eliminar2.replace(",", "")
+            materia_choca = self.asignaturas_segunda
+            print(materia_choca)
+            if materia_choca:
+                materia_choca = materia_choca.replace(aux_materias_eliminar2, "")
+                print(materia_choca)
+            print(materia_choca)
+            self.asignaturas_segunda = materia_choca
+
+            s_aux_prerre.append(str(aux_materias_eliminar2))
+            primera_puede = asig_primera_aux[0][2]
+
+
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+        print(ciclo_siguiente2.id)
+        aux_materias_eliminar3 = None
+        if len(asig_primera_aux)>=1:
+            aux_materias_eliminar3 = self.verificar_horario_bajo(ciclo_siguiente2.id, asig_primera_aux[0][4],
+                                                             asig_primera_aux[0][3])
+        print("Eloooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo")
+        print(aux_materias_eliminar3)
+
+        if aux_materias_eliminar3 != None:
+            s_aux_prerre.append(str(aux_materias_eliminar3))
+
         for i in range(len(asig_segunda_aux)):
             aux_metodo =  aux_metodo + self.verificar_horario(ciclo.id, asig_segunda_aux[i][4]) + ","
             print(aux_metodo)
@@ -209,13 +267,7 @@ class Matricula(models.Model):
 
         #primera matricuala
 
-        asig_primera_aux = []
 
-        for asig_primera in self.asignaturas_pendientes:
-            aux = [int(s) for s in re.findall(r'-?\d\d*', str(asig_primera.ciclo_id.name))]
-            aux1 = int(aux[0])
-            dato3 = [aux1, str(asig_primera.ciclo_id.name), str(asig_primera.name), str(asig_primera.ciclo_id.id), asig_primera.id]
-            asig_primera_aux.append(dato3)
 
         asig_primera_aux_ordenada = sorted(asig_primera_aux, key=lambda x: x[0])
         asig_primera_aux_ordenada_des = sorted(asig_primera_aux, key=lambda x: x[0], reverse=True)
