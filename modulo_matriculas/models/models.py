@@ -435,6 +435,8 @@ class Matricula(models.Model):
 
             print("ENtradadasdasdadasd")
             print(ciclo_mayor)
+
+
             #ciclo anterior
             anterior_ciclo_matricular = ciclo_mayor - 1
             anterior_ciclo_matricular = "ciclo_" + str(anterior_ciclo_matricular)
@@ -443,7 +445,7 @@ class Matricula(models.Model):
                 [('numero_ciclo', '=', anterior_ciclo_matricular), ('carrera_id', '=', carrera_id_ma)], limit=1)
 
             #ciclo siguiente
-            nuevo_ciclo_matricular = ciclo_mayor + 1
+            nuevo_ciclo_matricular = ciclo_mayor
             nuevo_ciclo_matricular = "ciclo_" + str(nuevo_ciclo_matricular)
             print(nuevo_ciclo_matricular)
             ciclo_siguiente2 = self.env['ma.ciclo'].search(
@@ -485,6 +487,14 @@ class Matricula(models.Model):
             aux_materias_eliminar3 = self.verificar_horario_bajo(ciclo_siguiente2.id, asig_primera_aux[0][4], asig_primera_aux[0][3])
             print("Eloooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo")
             print(aux_materias_eliminar3)
+            aux_materias_eliminar2 = aux_materias_eliminar3.replace(",", "")
+            materia_choca = self.asignaturas_segunda
+            print(materia_choca)
+            if materia_choca:
+                materia_choca = materia_choca.replace(aux_materias_eliminar2, "")
+                print(materia_choca)
+            print(materia_choca)
+            self.asignaturas_segunda = materia_choca
             if aux_materias_eliminar3 != None:
                 name_asig = str(name_asig) + ", " + str(aux_materias_eliminar3)
             for amayor in asignaturas_ciclo_siguiente2:
