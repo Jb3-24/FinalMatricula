@@ -166,8 +166,8 @@ class Matricula(models.Model):
 
         for i in range(len(asig_segunda_aux)):
             aux_metodo = aux_metodo + self.verificar_horario(ciclo.id, asig_segunda_aux[i][4]) + ","
-            aux_metodo = aux_metodo + self.verificar_horario(ciclo_siguiente2.id, asig_segunda_aux[i][4]) + ","
             aux_metodo = aux_metodo + self.verificar_horario(ciclo_anterior2.id, asig_segunda_aux[i][4]) + ","
+            aux_metodo = aux_metodo + self.verificar_horario_bajo(ciclo_siguiente2.id, asig_segunda_aux[0][4], asig_segunda_aux[0][3]) + ","
 
             print(aux_metodo)
         aux_metodo = aux_metodo.replace(",,", ",")
