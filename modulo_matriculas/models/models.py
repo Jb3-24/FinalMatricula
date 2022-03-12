@@ -834,24 +834,20 @@ class Matricula(models.Model):
                     error_horario.append(pa_lunes.asignatura_id.name)
         for pa_martes in paralelo_anterior.horario_martes:
             for pm_martes in paralelo_matricular.horario_martes:
-                if pa_martes.asignatura_id.id == reprobadas_id and pm_martes.asignatura_id.id == primera_id and pa_martes.numero_hora == pm_martes.numero_hora \
-                        and pm_martes.ciclo_id.id == id_ciclo_matricular:
-                    error_horario.append(pm_martes.asignatura_id.name)
+                if pa_martes.asignatura_id.id == primera_id and pm_martes.asignatura_id.id == reprobadas_id and pa_martes.numero_hora == pm_martes.numero_hora:
+                    error_horario.append(pa_lunes.asignatura_id.name)
         for pa_miercoles in paralelo_anterior.horario_miercoles:
             for pm_miercoles in paralelo_matricular.horario_miercoles:
-                if pa_miercoles.asignatura_id.id == reprobadas_id and pm_miercoles.asignatura_id.id == primera_id and pa_miercoles.numero_hora == pm_miercoles.numero_hora \
-                        and pm_miercoles.ciclo_id.id == id_ciclo_matricular:
-                    error_horario.append(pm_miercoles.asignatura_id.name)
+                if pa_miercoles.asignatura_id.id == primera_id and pm_miercoles.asignatura_id.id == reprobadas_id and pa_miercoles.numero_hora == pm_miercoles.numero_hora:
+                    error_horario.append(pa_lunes.asignatura_id.name)
         for pa_jueves in paralelo_anterior.horario_jueves:
             for pm_jueves in paralelo_matricular.horario_jueves:
-                if pa_jueves.asignatura_id.id == reprobadas_id and pm_jueves.asignatura_id.id == primera_id and pa_jueves.numero_hora == pm_jueves.numero_hora \
-                        and pm_jueves.ciclo_id.id == id_ciclo_matricular:
-                    error_horario.append(pm_jueves.asignatura_id.name)
+                if pa_jueves.asignatura_id.id == primera_id and pm_jueves.asignatura_id.id == reprobadas_id and pa_jueves.numero_hora == pm_jueves.numero_hora:
+                    error_horario.append(pa_lunes.asignatura_id.name)
         for pa_viernes in paralelo_anterior.horario_viernes:
             for pm_viernes in paralelo_matricular.horario_viernes:
-                if pa_viernes.asignatura_id.id == reprobadas_id and pm_viernes.asignatura_id.id == primera_id and pa_viernes.numero_hora == pm_viernes.numero_hora \
-                        and pm_viernes.ciclo_id.id == id_ciclo_matricular:
-                    error_horario.append(pm_viernes.asignatura_id.name)
+                if pa_viernes.asignatura_id.id == primera_id and pm_viernes.asignatura_id.id == reprobadas_id and pa_viernes.numero_hora == pm_viernes.numero_hora:
+                    error_horario.append(pa_lunes.asignatura_id.name)
         # Horario Fin
         resultantList = ""
         print("Erorr horariooooooooooooooooooooo")
