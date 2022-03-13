@@ -587,22 +587,23 @@ class Matricula(models.Model):
 
         #caso tres 0 segunda y 1 o 2 en pendientes
         if (len(asig_primera_aux) == 2 or len(asig_primera_aux) == 1) and len(asig_segunda_aux) == 0 and len(asig_tercera_aux) == 0:
-
+            suma_creditos = 0
             print("Entra1111111111111111")
 
-            ciclo_siguiente2 = self.env['ma.ciclo'].search(
-                [('id', '=', int(self.ciclo_matricular_especial.id)), ('carrera_id', '=',carrera_id_ma)], limit=1)
-            num_asig_aux = ciclo_siguiente2.n_asignaturas
+            num_asig_aux = int(self.ciclo_matricular_especial.n_asignaturas)
             sesentaxciento_materias = round(int(num_asig_aux) * 0.6)
 
+            creditos_aux = int(self.ciclo_matricular_especial.creditos)
+            creditos = round(creditos_aux * 0.6)
+
             asignaturas_ciclo_siguiente2 = self.env['ma.asignatura'].search(
-                [('ciclo_id', '=', ciclo_siguiente2.id)])
+                [('ciclo_id', '=', int(self.ciclo_matricular_especial.id))])
             name_asig = ""
             name_asig_correcto = ""
             for amayor in asignaturas_ciclo_siguiente2:
                 for i in range(len(asig_primera_aux)):
                     print("eNTRA A HORARIO")
-                    aux_materias_eliminar = self.verificar_horario(ciclo_siguiente2.id, asig_primera_aux[i][4])
+                    aux_materias_eliminar = self.verificar_horario_caso3(int(self.ciclo_matricular_especial.id), asig_primera_aux[i][4])
                     print(aux_materias_eliminar)
                     if aux_materias_eliminar != None:
                         name_asig = str(name_asig) + ", " + str(aux_materias_eliminar)
@@ -631,6 +632,8 @@ class Matricula(models.Model):
             materias_add = ""
             print(sesentaxciento_materias)
             for i in range(3):
+                print(suma_creditos)
+                print(creditos)
 
                 if suma_creditos > creditos:
                     aux = len(materias_si)
@@ -688,6 +691,61 @@ class Matricula(models.Model):
         error_horario = []
 
         paralelo_anterior = self.paralelo_ciclo_reprobar
+
+
+        paralelo_matricular = self.env['ma.paralelo'].search(
+            [('name', '=', paralelo_anterior.name), ('ciclo_id', '=', id_ciclo_matricular)])
+
+
+        if paralelo_matricular.name == False:
+            paralelo_matricular = self.env['ma.paralelo'].search(
+                [('ciclo_id', '=', id_ciclo_matricular)], limit=1)
+        # Horario Inicio
+
+        for pa_lunes in paralelo_anterior.horario_lunes:
+            for pm_lunes in paralelo_matricular.horario_lunes:
+                if pa_lunes.asignatura_id.id == reprobadas_id and pa_lunes.numero_hora == pm_lunes.numero_hora \
+                        and pm_lunes.ciclo_id.id == id_ciclo_matricular:
+                    error_horario.append(pm_lunes.asignatura_id.name)
+        for pa_martes in paralelo_anterior.horario_martes:
+            for pm_martes in paralelo_matricular.horario_martes:
+                if pa_martes.asignatura_id.id == reprobadas_id and pa_martes.numero_hora == pm_martes.numero_hora \
+                        and pm_martes.ciclo_id.id == id_ciclo_matricular:
+                    error_horario.append(pm_martes.asignatura_id.name)
+        for pa_miercoles in paralelo_anterior.horario_miercoles:
+            for pm_miercoles in paralelo_matricular.horario_miercoles:
+                if pa_miercoles.asignatura_id.id == reprobadas_id and pa_miercoles.numero_hora == pm_miercoles.numero_hora \
+                        and pm_miercoles.ciclo_id.id == id_ciclo_matricular:
+                    error_horario.append(pm_miercoles.asignatura_id.name)
+        for pa_jueves in paralelo_anterior.horario_jueves:
+            for pm_jueves in paralelo_matricular.horario_jueves:
+                if pa_jueves.asignatura_id.id == reprobadas_id and pa_jueves.numero_hora == pm_jueves.numero_hora \
+                        and pm_jueves.ciclo_id.id == id_ciclo_matricular:
+                    error_horario.append(pm_jueves.asignatura_id.name)
+        for pa_viernes in paralelo_anterior.horario_viernes:
+            for pm_viernes in paralelo_matricular.horario_viernes:
+                if pa_viernes.asignatura_id.id == reprobadas_id and pa_viernes.numero_hora == pm_viernes.numero_hora \
+                        and pm_viernes.ciclo_id.id == id_ciclo_matricular:
+                    error_horario.append(pm_viernes.asignatura_id.name)
+        # Horario Fin
+        resultantList = ""
+        if error_horario:
+            resultantList = ""
+
+            for element in error_horario:
+                if element not in resultantList:
+                    resultantList = resultantList + "," + str(element)
+        print(resultantList)
+        return resultantList
+
+    def verificar_horario_caso3(self, id_ciclo_matricular, reprobadas_id):
+
+        error_horario = []
+
+        id_ciclo = self.ciclo_materias_pendientes
+
+        paralelo_anterior = self.env['ma.paralelo'].search(
+            [('ciclo_id', '=', int(id_ciclo))], limit=1)
 
 
         paralelo_matricular = self.env['ma.paralelo'].search(
