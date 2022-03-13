@@ -504,12 +504,14 @@ class Matricula(models.Model):
             aux_materias_eliminar3 = aux_materias_eliminar3.replace(",", "")
             if aux_materias_eliminar3 != None:
                 name_asig = str(name_asig) + ", " + str(aux_materias_eliminar3)
+            aux_materias_eliminar=""
             for amayor in asignaturas_ciclo_siguiente2:
                 for i in range(len(asig_segunda_aux)):
                     print("eNTRA A HORARIO")
-                    aux_materias_eliminar = self.verificar_horario(ciclo_siguiente2.id, asig_segunda_aux[i][4])
+                    if not(materia_choca):
+                        aux_materias_eliminar = self.verificar_horario(ciclo_siguiente2.id, asig_segunda_aux[i][4])
 
-                    print(aux_materias_eliminar)
+                        print(aux_materias_eliminar)
                     if aux_materias_eliminar != None:
                         name_asig = str(name_asig) + ", " + str(aux_materias_eliminar)
                     for prerre in amayor.prerrequisitos:
@@ -598,14 +600,14 @@ class Matricula(models.Model):
             name_asig = ""
             name_asig_correcto = ""
             for amayor in asignaturas_ciclo_siguiente2:
-                for i in range(len(asig_segunda_aux)):
+                for i in range(len(asig_primera_aux)):
                     print("eNTRA A HORARIO")
-                    aux_materias_eliminar = self.verificar_horario(ciclo_siguiente2.id, asig_segunda_aux[i][4])
+                    aux_materias_eliminar = self.verificar_horario(ciclo_siguiente2.id, asig_primera_aux[i][4])
                     print(aux_materias_eliminar)
                     if aux_materias_eliminar != None:
                         name_asig = str(name_asig) + ", " + str(aux_materias_eliminar)
                     for prerre in amayor.prerrequisitos:
-                        if str(prerre._origin.name) == str(asig_segunda_aux[i][2]):
+                        if str(prerre._origin.name) == str(asig_primera_aux[i][2]):
                             aux_prerre = amayor.name + ", "
                             name_asig = name_asig + aux_prerre
 
@@ -816,6 +818,7 @@ class Matricula(models.Model):
         print("ECTRA 0")
         print(paralelo_anterior)
         print(paralelo_matricular)
+        print("LUES")
         for pa_lunes in paralelo_anterior.horario_lunes:
             print("Extra")
             print(pa_lunes.asignatura_id.name)
@@ -830,24 +833,74 @@ class Matricula(models.Model):
                 print(primera_id)
 
                 if pa_lunes.asignatura_id.id == primera_id and pm_lunes.asignatura_id.id == reprobadas_id and pa_lunes.numero_hora == pm_lunes.numero_hora:
+                    print("AGREGA ESTA")
                     print(pa_lunes.asignatura_id.name)
                     error_horario.append(pa_lunes.asignatura_id.name)
+        print("MARTES")
         for pa_martes in paralelo_anterior.horario_martes:
+            print("Extra")
+            print(pa_martes.asignatura_id.name)
             for pm_martes in paralelo_matricular.horario_martes:
+                print("Extra 2")
+                print(pm_martes.asignatura_id.name)
+                print("id Asignatura")
+                print(pa_martes.asignatura_id.id)
+                print(reprobadas_id)
+                print(pm_martes.asignatura_id.id)
+                print(primera_id)
+
                 if pa_martes.asignatura_id.id == primera_id and pm_martes.asignatura_id.id == reprobadas_id and pa_martes.numero_hora == pm_martes.numero_hora:
-                    error_horario.append(pa_lunes.asignatura_id.name)
+                    print("AGREGA ESTA")
+                    print(pa_martes.asignatura_id.name)
+                    error_horario.append(pa_martes.asignatura_id.name)
+        print("MIERCOLES")
         for pa_miercoles in paralelo_anterior.horario_miercoles:
+            print("Extra")
+            print(pa_miercoles.asignatura_id.name)
             for pm_miercoles in paralelo_matricular.horario_miercoles:
+                print("Extra 2")
+                print(pm_miercoles.asignatura_id.name)
+                print("id Asignatura")
+                print(pa_miercoles.asignatura_id.id)
+                print(reprobadas_id)
+                print(pm_miercoles.asignatura_id.id)
+                print(primera_id)
                 if pa_miercoles.asignatura_id.id == primera_id and pm_miercoles.asignatura_id.id == reprobadas_id and pa_miercoles.numero_hora == pm_miercoles.numero_hora:
-                    error_horario.append(pa_lunes.asignatura_id.name)
+                    print("AGREGA ESTA")
+                    print(pa_miercoles.asignatura_id.name)
+                    error_horario.append(pa_miercoles.asignatura_id.name)
+        print("JUEVES")
         for pa_jueves in paralelo_anterior.horario_jueves:
+            print("Extra")
+            print(pa_lunes.asignatura_id.name)
             for pm_jueves in paralelo_matricular.horario_jueves:
+                print("Extra 2")
+                print(pm_lunes.asignatura_id.name)
+                print("id Asignatura")
+                print(pa_lunes.asignatura_id.id)
+                print(reprobadas_id)
+                print(pm_lunes.asignatura_id.id)
+                print(primera_id)
                 if pa_jueves.asignatura_id.id == primera_id and pm_jueves.asignatura_id.id == reprobadas_id and pa_jueves.numero_hora == pm_jueves.numero_hora:
-                    error_horario.append(pa_lunes.asignatura_id.name)
+                    print("AGREGA ESTA")
+                    print(pa_jueves.asignatura_id.name)
+                    error_horario.append(pa_jueves.asignatura_id.name)
+        print("VIERES")
         for pa_viernes in paralelo_anterior.horario_viernes:
+            print("Extra")
+            print(pa_lunes.asignatura_id.name)
             for pm_viernes in paralelo_matricular.horario_viernes:
+                print("Extra 2")
+                print(pm_lunes.asignatura_id.name)
+                print("id Asignatura")
+                print(pa_lunes.asignatura_id.id)
+                print(reprobadas_id)
+                print(pm_lunes.asignatura_id.id)
+                print(primera_id)
                 if pa_viernes.asignatura_id.id == primera_id and pm_viernes.asignatura_id.id == reprobadas_id and pa_viernes.numero_hora == pm_viernes.numero_hora:
-                    error_horario.append(pa_lunes.asignatura_id.name)
+                    print("AGREGA ESTA")
+                    print(pa_viernes.asignatura_id.name)
+                    error_horario.append(pa_viernes.asignatura_id.name)
         # Horario Fin
         resultantList = ""
         print("Erorr horariooooooooooooooooooooo")
