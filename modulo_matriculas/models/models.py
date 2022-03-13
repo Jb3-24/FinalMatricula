@@ -76,7 +76,7 @@ class Matricula(models.Model):
         for i in matriculas:
             i.unlink()
 
-    def botonmatricular(self):
+    def subotonmatricular(self):
         carrera_id_ma = self.carrera_id.id
         asig_tercera_aux = []
         for asig_tercera in self.asignaturas_reprobadas_tercera:
@@ -166,22 +166,24 @@ class Matricula(models.Model):
         print(s_aux_prerre)
         aux_metodo = ""
 
-
+        auxiliar = ""
         for i in range(len(asig_segunda_aux)):
             print("Vueltaaaaaaaaaaaaaaa" + str(i))
             aux_metodo = aux_metodo + self.verificar_horario(ciclo.id, asig_segunda_aux[i][4]) + ","
+            auxiliar = aux_metodo + self.verificar_horario(ciclo.id, asig_segunda_aux[i][4]) + ","
             print("111111111111111111111111111111111")
             print(self.verificar_horario(ciclo.id, asig_segunda_aux[i][4]))
             print(len(contC))
             if len(contC) > 2:
                 print(asig_segunda_aux_ordenada[i][2])
                 print("Entra")
-                aux_metodo = aux_metodo + self.verificar_horario_bajo(ciclo_anterior2.id, asig_segunda_aux[i][4], ciclo_siguiente2.id) + ","
-                print("222222222222222222222222222222222222")
-                print(self.verificar_horario(ciclo_anterior2.id, asig_segunda_aux[i][4]))
-                aux_metodo = aux_metodo + self.verificar_horario_bajo(ciclo.id, asig_segunda_aux[i][4], ciclo_siguiente2.id) + ","
-                print("333333333333333333333333333333333")
-                print(self.verificar_horario_bajo(ciclo_siguiente2.id, asig_segunda_aux[i][4], asig_segunda_aux[i][3]))
+                if not(asig_segunda_aux[i][3] in auxiliar):
+                    aux_metodo = aux_metodo + self.verificar_horario_bajo(ciclo_anterior2.id, asig_segunda_aux[i][4], ciclo_siguiente2.id) + ","
+                    print("222222222222222222222222222222222222")
+                    print(self.verificar_horario(ciclo_anterior2.id, asig_segunda_aux[i][4]))
+                    aux_metodo = aux_metodo + self.verificar_horario_bajo(ciclo.id, asig_segunda_aux[i][4], ciclo_siguiente2.id) + ","
+                    print("333333333333333333333333333333333")
+                    print(self.verificar_horario_bajo(ciclo_siguiente2.id, asig_segunda_aux[i][4], asig_segunda_aux[i][3]))
             print(aux_metodo)
         aux_metodo = aux_metodo.replace(",,", ",")
         aux_seperar = aux_metodo.split(',')
