@@ -76,7 +76,7 @@ class Matricula(models.Model):
         for i in matriculas:
             i.unlink()
 
-    def subotonmatricular(self):
+    def botonmatricular(self):
         carrera_id_ma = self.carrera_id.id
         asig_tercera_aux = []
         for asig_tercera in self.asignaturas_reprobadas_tercera:
