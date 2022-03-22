@@ -1,10 +1,10 @@
 {
     "name": "Simulación de matrículas en la Carrera de Ingeniería en Sistemas",
-    "description": "Módulo de software para la simulación de matrícula por asignatura en la carrera de Ingeniería en Sistemas de la Universidad Nacional de Loja",
+    "description": "Módulo para la simulación de matrícula por asignatura en la carrera de Ingeniería en Sistemas/Computación de la Universidad Nacional de Loja",
     "author": "Johnney Bermeo",
 
     "summary": """
-        Módulo de software para la simulación de matrícula por asignatura en la carrera de Ingeniería en Sistemas de la Universidad Nacional de Loja
+        Módulo para la simulación de matrícula por asignatura en la carrera de Ingeniería en Sistemas/Computación de la Universidad Nacional de Loja
         """,
 
     "website": "https://unl.edu.ec/",

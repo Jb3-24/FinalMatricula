@@ -611,11 +611,13 @@
         <!--MENÚ-->
         <menuitem id="menu_main_matricula_app_A"
                    name="Matrículas"
+                   web_icon="modulo_matriculas,static/description/icon.png"
                    groups = "modulo_matriculas.res_groups_administrador"
                    action="modulo_matriculas.action_view_carrera"/>
 
         <menuitem id="menu_main_matricula_app_Alumno"
                    name="Matrículas"
+                   web_icon="modulo_matriculas,static/description/icon.png"
                    groups = "modulo_matriculas.res_groups_alumnos"
                    action="modulo_matriculas.action_view_matricula_alumno"/>
 
