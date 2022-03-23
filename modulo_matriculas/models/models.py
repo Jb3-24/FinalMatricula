@@ -8,6 +8,17 @@ class Carrera(models.Model):
     _name = "ma.carrera"
     _description = "Carrera"
     name = fields.Char(string="Nombre de la Carrera", required=True)
+    numero_ciclos = fields.Integer(string="Número de Ciclos", required=True)
+    duracion_horas = fields.Integer(string="Duración en Horas", required=True)
+    costo_optimo = fields.Float(string='Costo Óptimo Anual', digits=(8, 2), required=True)
+
+
+class GrupoSocioeconomico(models.Model):
+    _name = "ma.grupo_socioeconomico"
+    _description = "Grupo Socioeconómico"
+    name = fields.Char(string="Grupo Socioeconómico", required=True)
+    arancel = fields.Float(string='Arancel', digits=(8, 2), required=True)
+    matricula = fields.Float(string='Matrícula', digits=(8, 2), required=True)
 
 
 class Matricula(models.Model):
@@ -71,6 +82,17 @@ class Matricula(models.Model):
     ciclo_matricular = fields.Char(string="Ciclo en el que se va a matricular")
     ciclo_matricular_especial2 = fields.Char(string="Ciclo especial")
 
+    #choque de horario
+    materias_horario_choque = fields.Char(string="Materias que chocan")
+
+    #costo de matricula
+    valores_pagar = fields.Char(string="Valores a pagar")
+    calcular_valores = fields.Boolean(string="Calcular valores por pérdida de Gratuidad", default=False)
+    grupo_socioeconomico_id = fields.Many2one(
+        "ma.grupo_socioeconomico", string="Grupo Socioeconómico",
+        default=lambda self: self.env['ma.grupo_socioeconomico'].search([], limit=1),
+        ondelete="cascade")
+
     def eliminar_matriculas_diarias(self):
         matriculas = self.env["ma.matricula"].search([])
         for i in matriculas:
@@ -79,7 +101,13 @@ class Matricula(models.Model):
     def botonmatricular(self):
         carrera_id_ma = self.carrera_id.id
         asig_tercera_aux = []
+        total_creditos_tercera = 0
+        total_creditos_segunda = 0
+        aux_materias_eliminar = ""
+        aux_materias_eliminar2 = ""
+        aux_materias_eliminar3 = ""
         for asig_tercera in self.asignaturas_reprobadas_tercera:
+            total_creditos_tercera =  total_creditos_tercera + asig_tercera.creditos
             aux = [int(s) for s in re.findall(r'-?\d\d*', str(asig_tercera.ciclo_id.name))]
             aux1 = int(aux[0])
             dato = [aux1,str(asig_tercera.ciclo_id.name),str(asig_tercera.name)]
@@ -106,6 +134,7 @@ class Matricula(models.Model):
         bool_aux = False
         contC = []
         for asig_segunda in self.asignaturas_reprobadas:
+            total_creditos_segunda = total_creditos_segunda + asig_segunda.creditos
             aux = [int(s) for s in re.findall(r'-?\d\d*', str(asig_segunda.ciclo_id.name))]
             aux1 = int(aux[0])
             if not(aux1 in contC):
@@ -687,7 +716,49 @@ class Matricula(models.Model):
         self.asignaturas_segunda = self.asignaturas_segunda.replace(",,", "")
         self.asignaturas_tercera = self.asignaturas_tercera.replace(",,", "")
 
+        aux_reporte_horario = aux_materias_eliminar + aux_materias_eliminar2 + aux_materias_eliminar3
+        aux_reporte_horario = aux_reporte_horario.strip()
+        aux_reporte_horario = aux_reporte_horario.replace(",,,", ",")
+        aux_reporte_horario = aux_reporte_horario.replace(",,", ",")
+        aux_list_horario = aux_reporte_horario.split(",")
+        aux_list_horario1 = set(aux_list_horario)
+        self.materias_horario_choque = aux_list_horario1
 
+
+        valor = ""
+        if self.calcular_valores:
+            valor = self.calcularValores(total_creditos_tercera, total_creditos_segunda)
+
+        self.valores_pagar = valor
+
+
+    def calcularValores(self, total_creditos_tercera, total_creditos_segunda):
+        valor = 0
+
+        n_horas = self.carrera_id.duracion_horas
+        n_ciclos = self.carrera_id.numero_ciclos
+        costo_optimo_anual = self.carrera_id.costo_optimo
+        arancel = self.grupo_socioeconomico_id.arancel
+        arancel = arancel/100
+        matricula = self.grupo_socioeconomico_id.matricula
+        matricula = matricula/100
+        pa = n_horas/n_ciclos
+        aux_tercera = total_creditos_tercera * 2
+        factorA = aux_tercera + total_creditos_segunda
+        factorB = pa
+        factorC = costo_optimo_anual
+        factorD = factorC/factorB
+        factorE = factorD*factorA
+        factorF = arancel
+        factorG = factorE * factorF
+        factorH = factorB/2
+        factorI = factorD * factorH
+        factorJ = matricula
+        factorK = factorI*factorJ
+        valor = factorG + factorK
+        valor = round(valor,2)
+
+        return valor
     def verificar_horario(self, id_ciclo_matricular, reprobadas_id):
 
         error_horario = []
