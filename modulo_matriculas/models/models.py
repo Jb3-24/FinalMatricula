@@ -19,6 +19,7 @@ class GrupoSocioeconomico(models.Model):
     name = fields.Char(string="Grupo Socioeconómico", required=True)
     arancel = fields.Float(string='Arancel', digits=(8, 2), required=True)
     matricula = fields.Float(string='Matrícula', digits=(8, 2), required=True)
+    #borrar
 
 class CostoOptimo(models.Model):
     _name = "ma.costo_optimo"

@@ -699,6 +699,8 @@
                   action="modulo_matriculas.action_view_costo_optimo"/>
 
 
+
+
         <menuitem id="menu_datos_periodo_matricula"
                   name="Periodo Matrículas"
                   groups = "modulo_matriculas.res_groups_administrador"
