@@ -10,7 +10,7 @@ class Carrera(models.Model):
     name = fields.Char(string="Nombre de la Carrera", required=True)
     numero_ciclos = fields.Integer(string="Número de Ciclos", required=True)
     duracion_horas = fields.Integer(string="Duración en Horas", required=True)
-    costo_optimo = fields.Float(string='Costo Óptimo Anual', digits=(8, 2), required=True)
+
 
 
 class GrupoSocioeconomico(models.Model):
@@ -19,6 +19,12 @@ class GrupoSocioeconomico(models.Model):
     name = fields.Char(string="Grupo Socioeconómico", required=True)
     arancel = fields.Float(string='Arancel', digits=(8, 2), required=True)
     matricula = fields.Float(string='Matrícula', digits=(8, 2), required=True)
+
+class CostoOptimo(models.Model):
+    _name = "ma.costo_optimo"
+    _description = "Costo Óptimo"
+    name = fields.Char(string="Régimen", required=True)
+    valor = fields.Float(string='Valor', digits=(8, 2), required=True)
 
 
 class Matricula(models.Model):
@@ -91,6 +97,11 @@ class Matricula(models.Model):
     grupo_socioeconomico_id = fields.Many2one(
         "ma.grupo_socioeconomico", string="Grupo Socioeconómico",
         default=lambda self: self.env['ma.grupo_socioeconomico'].search([], limit=1),
+        ondelete="cascade")
+
+    costo_optimo_id = fields.Many2one(
+        "ma.costo_optimo", string="Costo Óptimo",
+        default=lambda self: self.env['ma.costo_optimo'].search([], limit=1),
         ondelete="cascade")
 
     def eliminar_matriculas_diarias(self):
@@ -737,7 +748,7 @@ class Matricula(models.Model):
 
         n_horas = self.carrera_id.duracion_horas
         n_ciclos = self.carrera_id.numero_ciclos
-        costo_optimo_anual = self.carrera_id.costo_optimo
+        costo_optimo_anual = self.costo_optimo_id.valor
         arancel = self.grupo_socioeconomico_id.arancel
         arancel = arancel/100
         matricula = self.grupo_socioeconomico_id.matricula

@@ -134,7 +134,29 @@
         <field name="perm_read" eval="1"/>
     </record>
 
+    <!--Accesos para el modelo Costo Optimo-->
+    <record id="model_access_administrador_costo_optimo" model="ir.model.access">
+        <field name="name">model.access.ma.costo</field>
+        <field name="model_id" ref="modulo_matriculas.model_ma_costo_optimo"/>
+        <field name="group_id" ref="modulo_matriculas.res_groups_gestor"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
     <!--Accesos para el modelo Carrera Alumno-->
+    <record id="model_access_alumno_costo_alumno" model="ir.model.access">
+        <field name="name">model.access.ma.costo.alumno</field>
+        <field name="model_id" ref="modulo_matriculas.model_ma_costo_optimo"/>
+        <field name="group_id" ref="modulo_matriculas.res_groups_alumnos"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!--Accesos para el modelo costo optimo alumno-->
     <record id="model_access_alumno_grupo_socioeconomico_alumno" model="ir.model.access">
         <field name="name">model.access.ma.carrera.alumno</field>
         <field name="model_id" ref="modulo_matriculas.model_ma_grupo_socioeconomico"/>
