@@ -16,11 +16,21 @@
                                 <field name ="cedula_alumno" placeholder="Ingrese su nro. de cédula"/>
                                 <field name ="periodo_id"/>
                                 <field name="carrera_id"/>
-                                <field name="calcular_valores"/>
-                                <field name="grupo_socioeconomico_id" attrs="{'invisible': [('calcular_valores', '=', False)]}"/>
-                                <field name="costo_optimo_id" attrs="{'invisible': [('calcular_valores', '=', False)]}"/>
-
                             </group>
+                            <br></br>
+
+                            <group>
+                                <field name="calcular_valores"/>
+                            </group>
+                            <br></br>
+                            <group>
+                                <field name="grupo_socioeconomico_id" attrs="{'invisible': [('calcular_valores', '=', False)]}"/>
+                            </group>
+                            <br></br>
+                            <group>    
+                                <field name="costo_optimo_id" string="Régimen Académico" attrs="{'invisible': [('calcular_valores', '=', False)]}"/>
+                            </group>
+                            <br></br>
                         <hr/>
                         <notebook>
                             <page string="Datos de Tercera Matrícula">
@@ -686,20 +696,6 @@
                   parent="modulo_matriculas.menu_datos_datos_carrera"
                   action="modulo_matriculas.action_view_paralelo"/>
 
-        <menuitem id="menu_main_grupos"
-                  name="Grupo Socioeconómico"
-                  groups = "modulo_matriculas.res_groups_administrador"
-                  parent="modulo_matriculas.menu_datos_datos_carrera"
-                  action="modulo_matriculas.action_view_grupo"/>
-
-        <menuitem id="menu_main_costo"
-                  name="Régimen Acedémico"
-                  groups = "modulo_matriculas.res_groups_administrador"
-                  parent="modulo_matriculas.menu_datos_datos_carrera"
-                  action="modulo_matriculas.action_view_costo_optimo"/>
-
-
-
 
         <menuitem id="menu_datos_periodo_matricula"
                   name="Periodo Matrículas"
@@ -711,5 +707,17 @@
                   groups = "modulo_matriculas.res_groups_administrador"
                   parent="modulo_matriculas.menu_datos_periodo_matricula"
                   action="modulo_matriculas.action_view_periodo_matricula"/>
+
+        <menuitem id="menu_main_grupos"
+                  name="Grupo Socioeconómico"
+                  groups = "modulo_matriculas.res_groups_administrador"
+                  parent="modulo_matriculas.menu_datos_periodo_matricula"
+                  action="modulo_matriculas.action_view_grupo"/>
+
+        <menuitem id="menu_main_costo"
+                  name="Régimen Acedémico"
+                  groups = "modulo_matriculas.res_groups_administrador"
+                  parent="modulo_matriculas.menu_datos_periodo_matricula"
+                  action="modulo_matriculas.action_view_costo_optimo"/>
     </data>
 </odoo>
