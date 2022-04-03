@@ -24,11 +24,11 @@
                             </group>
                             <br></br>
                             <group>
-                                <field name="grupo_socioeconomico_id" attrs="{'invisible': [('calcular_valores', '=', False)]}"/>
+                                <field name="grupo_socioeconomico_id" help="Seleccione el grupo socio económico que fue asignado por bienestar estudiantil" attrs="{'invisible': [('calcular_valores', '=', False)]}"/>
                             </group>
                             <br></br>
                             <group>    
-                                <field name="costo_optimo_id" string="Régimen Académico" attrs="{'invisible': [('calcular_valores', '=', False)]}"/>
+                                <field name="costo_optimo_id" string="Régimen Académico" help="Seleccione el año más reciente en el que reprobó asignaturas" attrs="{'invisible': [('calcular_valores', '=', False)]}"/>
                             </group>
                             <br></br>
                         <hr/>
@@ -36,39 +36,36 @@
                             <page string="Datos de Tercera Matrícula">
 
                             <group>
-                                <field name ="ciclo_materias_reprobadas_tercera" domain="[('carrera_id', '=', carrera_id)]"/>
+                                <field name ="ciclo_materias_reprobadas_tercera" help="Seleccione los ciclos en los cuales tiene tercera matrícula" domain="[('carrera_id', '=', carrera_id)]"/>
                             </group>
                                 <br></br>
 
-                                <group>
-
-                                <field name="asignaturas_reprobadas_tercera" domain="[('ciclo_id', '=', ciclo_materias_reprobadas_tercera)]"/>
+                            <group>
+                                <field name="asignaturas_reprobadas_tercera" help="Seleccione todas las asignaturas en las que tiene tercera matrícula" domain="[('ciclo_id', '=', ciclo_materias_reprobadas_tercera)]"/>
                             </group>
                             </page>
                             <page string="Datos de Segunda Matrícula">
-
-
                             <group>
-                                <field name="ciclo_materias_reprobadas" domain="[('carrera_id', '=', carrera_id)]"/>
+                                <field name="ciclo_materias_reprobadas" help="Seleccione los ciclos en los cuales tiene segunda matrícula" domain="[('carrera_id', '=', carrera_id)]"/>
                             </group>
                                 <br></br>
                             <group>
-                                <field name="paralelo_ciclo_reprobar" domain="[('ciclo_id', '=', ciclo_materias_reprobadas)]"/>
+                                <field name="paralelo_ciclo_reprobar" help="Seleccione el paralelo en el cuál reprobó asignaturas" domain="[('ciclo_id', '=', ciclo_materias_reprobadas)]"/>
                             </group>
                                 <br></br>
                             <group>
-                                <field name="asignaturas_reprobadas" domain="[('ciclo_id', '=', ciclo_materias_reprobadas)]"/>
+                                <field name="asignaturas_reprobadas" help="Seleccione todas las asignaturas en las que tiene segunda matrícula" domain="[('ciclo_id', '=', ciclo_materias_reprobadas)]"/>
                             </group>
 
                             </page>
-                            <page string="Datos de Primera Matrícula">
+                            <page string="Datos de Primera Matrícula" help="Ingresar solo las asignaturas pendientes que tenga en su malla curricular">
 
                             <group>
-                                <field name ="ciclo_materias_pendientes" domain="[('carrera_id', '=', carrera_id)]" />
+                                <field name ="ciclo_materias_pendientes" help="Seleccione los ciclos en los cuales tiene asignaturas pendientes" domain="[('carrera_id', '=', carrera_id)]" />
                             </group>
                                 <br></br>
                             <group>
-                                <field name="asignaturas_pendientes" domain="[('ciclo_id', '=', ciclo_materias_pendientes)]"/>
+                                <field name="asignaturas_pendientes" help="Seleccione todas las asignaturas pendientes que tenga" domain="[('ciclo_id', '=', ciclo_materias_pendientes)]"/>
                             </group>
                                 <br></br>
                             <group>
@@ -92,19 +89,19 @@
                         <br></br>
 
                             <group>
-                                <field name="ciclo_matricular" readonly="1"/>
+                                <field name="ciclo_matricular" help="Ciclo en el que se puede matrícular" readonly="1"/>
                             </group>
                             <group>
-                                <field name="asignaturas_tercera" readonly="1"/>
+                                <field name="asignaturas_tercera" help="Solo puede solicitar matrícula a esta asignatura por ser tercera matrícula" readonly="1"/>
                             </group>
                             <group>
-                                <field name="asignaturas_segunda" readonly="1"/>
+                                <field name="asignaturas_segunda" help="Asignaturas a las que puede solicitar segunda matrícula" readonly="1"/>
                             </group>
                             <group>
-                                <field name="asignaturas_primera" readonly="1"/>
+                                <field name="asignaturas_primera" help="Asignaturas pendientes a las que puede solicitar matrícula" readonly="1"/>
                             </group>
                             <group>
-                                <field name="valores_pagar" readonly="1"/>
+                                <field name="valores_pagar" string="Valores aproximados a pagar" help="Valor estimado a pagar por pérdida de gratuidad" readonly="1"/>
                             </group>
 
                     </sheet>
