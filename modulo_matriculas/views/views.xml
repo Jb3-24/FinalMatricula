@@ -50,7 +50,7 @@
                             </group>
                                 <br></br>
                             <group>
-                                <field name="paralelo_ciclo_reprobar" help="Seleccione el paralelo en el cuál reprobó asignaturas" domain="[('ciclo_id', '=', ciclo_materias_reprobadas)]"/>
+                                <field name="paralelo_ciclo_reprobar" help="Seleccione el paralelo en el cuál reprobó asignaturas" domain="[('ciclo_id', '=', ciclo_materias_reprobadas), ('periodo_id', '=', periodo_id)]"/>
                             </group>
                                 <br></br>
                             <group>
@@ -73,11 +73,12 @@
                             </group>
                                 <br></br>
                             <group>
-                                <field name ="ciclo_matricular_especial" domain="[('carrera_id', '=', carrera_id)]"  attrs="{'invisible': [('validar_matricula_1_2', '=', False)]}"/>
+                                <field name ="ciclo_matricular_especial" domain="[('carrera_id', '=', carrera_id)]"  attrs="{'invisible': ['|',('validar_matricula_1_2', '=', False),('matricular_mismo_ciclo', '=', True)]}"/>
                             </group>
                             </page>
 
                         </notebook>
+                        <group><field name="matricular_mismo_ciclo"/></group>
                             <div class="d-flex justify-content-center">
                                 <button style="float: center;"
                                     string="Simular Matrícula"
@@ -118,7 +119,7 @@
                     <field name="name"/>
                     <field name="fecha_inicio"/>
                     <field name="fecha_fin"/>
-                    <field name="estado" invisible="1"/>
+                    <field name="estado"/>
                     <button
                             string="Generar Solicitud Matricula"
                             type="object"
@@ -200,6 +201,7 @@
                     <sheet>
                             <group>
                                 <field name="name"/>
+                                <field name="periodo_id" string="Periodo Matrícula" domain="[('estado', '=', True)]"/>
                                 <field name="carrera_id" string="Filtrar por Carrera" />
                                 <field name="ciclo_id" domain="[('carrera_id', '=', carrera_id)]"/>
                             </group>
