@@ -14,7 +14,7 @@
                                 <field name ="decano" groups="modulo_matriculas.res_groups_administrador"/>
                                 <field name ="name" placeholder="Ingrese su nombre"/>
                                 <field name ="cedula_alumno" placeholder="Ingrese su nro. de cédula"/>
-                                <field name ="periodo_id"/>
+                                <field name ="periodo_id" domain="[('estado', '=', True)]"/>
                                 <field name="carrera_id"/>
                             </group>
                             <br></br>

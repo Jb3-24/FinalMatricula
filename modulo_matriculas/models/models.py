@@ -48,7 +48,7 @@ class Matricula(models.Model):
 
     periodo_id = fields.Many2one(
         "ma.periodomatricula", string="Periodo Matrícula",
-        default=lambda self: self.env['ma.periodomatricula'].search([], limit=1),
+        default=lambda self: self.env['ma.periodomatricula'].search([('estado', '=', True)], limit=1),
         ondelete="cascade")
 
     
