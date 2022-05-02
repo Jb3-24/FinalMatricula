@@ -157,6 +157,7 @@
                                 <field name="name"/>
                                 <field name="fecha_inicio"/>
                                 <field name="fecha_fin"/>
+                                <field name="estado"/>
                             </group>
                         <notebook>
                         </notebook>
