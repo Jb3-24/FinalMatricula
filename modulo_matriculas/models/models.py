@@ -740,11 +740,11 @@ class Matricula(models.Model):
             self.materias_horario_choque = aux_list_horario1
 
 
-            valor = ""
-            if self.calcular_valores:
-                valor = self.calcularValores(total_creditos_tercera, total_creditos_segunda)
+        valor = ""
+        if self.calcular_valores:
+            valor = self.calcularValores(total_creditos_tercera, total_creditos_segunda)
 
-            self.valores_pagar = valor
+        self.valores_pagar = valor
 
 
     def calcularValores(self, total_creditos_tercera, total_creditos_segunda):
