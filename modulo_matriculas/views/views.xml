@@ -715,7 +715,7 @@
                   action="modulo_matriculas.action_view_grupo"/>
 
         <menuitem id="menu_main_costo"
-                  name="Régimen Acedémico"
+                  name="Régimen Académico"
                   groups = "modulo_matriculas.res_groups_administrador"
                   parent="modulo_matriculas.menu_datos_periodo_matricula"
                   action="modulo_matriculas.action_view_costo_optimo"/>
