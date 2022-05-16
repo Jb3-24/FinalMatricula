@@ -90,21 +90,23 @@
                         <br></br>
 
                             <group>
-                                <field name="ciclo_matricular" help="Ciclo en el que se puede matrícular" readonly="1"/>
+                                <field name="ciclo_matricular" help="Ciclo en el que se puede matrícular" readonly="1" attrs="{'invisible':[('ocultar_resultados', '=', False)]}"/>
                             </group>
                             <group>
-                                <field name="asignaturas_tercera" help="Solo puede solicitar matrícula a esta asignatura por ser tercera matrícula" readonly="1"/>
+                                <field name="asignaturas_tercera" help="Solo puede solicitar matrícula a esta asignatura por ser tercera matrícula" readonly="1" attrs="{'invisible':[('ocultar_resultados', '=', False)]}"/>
                             </group>
                             <group>
-                                <field name="asignaturas_segunda" help="Asignaturas a las que puede solicitar segunda matrícula" readonly="1"/>
+                                <field name="asignaturas_segunda" help="Asignaturas a las que puede solicitar segunda matrícula" readonly="1" attrs="{'invisible':[('ocultar_resultados', '=', False)]}"/>
                             </group>
                             <group>
-                                <field name="asignaturas_primera" help="Asignaturas pendientes a las que puede solicitar matrícula" readonly="1"/>
+                                <field name="asignaturas_primera" help="Asignaturas pendientes a las que puede solicitar matrícula" readonly="1" attrs="{'invisible':[('ocultar_resultados', '=', False)]}"/>
                             </group>
                             <group>
-                                <field name="valores_pagar" string="Valores aproximados a pagar" help="Valor estimado a pagar por pérdida de gratuidad" readonly="1"/>
+                                <field name="valores_pagar" string="Valores aproximados a pagar" help="Valor estimado a pagar por pérdida de gratuidad" readonly="1" attrs="{'invisible':[('ocultar_resultados', '=', False)]}"/>
                             </group>
-
+                            <group>
+                                <field name="ocultar_resultados" invisible="1"/>
+                            </group>
                     </sheet>
                 </form>
             </field>
@@ -666,6 +668,12 @@
                    web_icon="modulo_matriculas,static/description/icon.png"
                    groups = "modulo_matriculas.res_groups_alumnos"
                    action="modulo_matriculas.action_view_matricula_alumno"/>
+
+        <menuitem id="menu_horario_alumno"
+                  name="Horarios"
+                  groups = "modulo_matriculas.res_groups_alumnos"
+                  parent="modulo_matriculas.menu_main_matricula_app_Alumno"
+                  action="modulo_matriculas.action_view_paralelo"/>/>
 
         <menuitem id="menu_datos_datos_carrera"
                   name="Datos Carrera"
