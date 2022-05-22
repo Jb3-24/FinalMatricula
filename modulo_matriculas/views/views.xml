@@ -105,6 +105,10 @@
                                 <field name="valores_pagar" string="Valores aproximados a pagar" help="Valor estimado a pagar por pérdida de gratuidad" readonly="1" attrs="{'invisible':[('ocultar_resultados', '=', False)]}"/>
                             </group>
                             <group>
+                            <field name="materias_horario_choque" string="Materias que se cruzan los  horarios" readonly="1" attrs="{'invisible':[('ocultar_resultados', '=', False)]}"/>
+
+                            </group>
+                            <group>
                                 <field name="ocultar_resultados" invisible="1"/>
                             </group>
                     </sheet>

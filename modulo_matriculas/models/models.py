@@ -109,6 +109,7 @@ class Matricula(models.Model):
 
     ocultar_resultados = fields.Boolean(string="Ocultar Resultados", default=False)
 
+
     def eliminar_matriculas_diarias(self):
         matriculas = self.env["ma.matricula"].search([])
         for i in matriculas:
