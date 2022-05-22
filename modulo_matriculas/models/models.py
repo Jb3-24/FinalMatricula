@@ -234,9 +234,7 @@ class Matricula(models.Model):
             print(aux_metodo)
         aux_metodo = aux_metodo.replace(",,", ",")
         aux_seperar = aux_metodo.split(',')
-        texto_sin_comas = aux_metodo.replace(",,", ",")
-        mensaje = "Las siguientes materias tienen cruce de horarios: " + texto_sin_comas
-        self.env.user.notify_info(message=mensaje)
+
         print("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM")
         print(aux_metodo)
         for a in aux_seperar:
@@ -744,8 +742,11 @@ class Matricula(models.Model):
             aux_reporte_horario = aux_reporte_horario.replace(",,", ",")
             aux_list_horario = aux_reporte_horario.split(",")
             aux_list_horario1 = set(aux_list_horario)
-            self.materias_horario_choque = aux_list_horario1
 
+            texto_sin_comas = aux_metodo.replace(",,", ",")
+            mensaje = "Las siguientes materias tienen cruce de horarios: " + texto_sin_comas
+            self.env.user.notify_info(message=mensaje)
+            self.materias_horario_choque = mensaje
 
         valor = ""
         if self.calcular_valores:
