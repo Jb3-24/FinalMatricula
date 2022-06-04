@@ -12,8 +12,8 @@
                     <sheet>
                             <group>
                                 <field name ="decano" groups="modulo_matriculas.res_groups_administrador"/>
-                                <field name ="name" placeholder="Ingrese su nombre"/>
-                                <field name ="cedula_alumno" placeholder="Ingrese su nro. de cédula"/>
+                                <field name ="name" placeholder="Ingresar nombres completos"/>
+                                <field name ="cedula_alumno" placeholder="Ingresar nro. de cédula"/>
                                 <field name ="periodo_id" domain="[('estado', '=', True)]"/>
                                 <field name="carrera_id"/>
                             </group>
@@ -24,11 +24,11 @@
                             </group>
                             <br></br>
                             <group>
-                                <field name="grupo_socioeconomico_id" help="Seleccione el grupo socio económico que fue asignado por bienestar estudiantil" attrs="{'invisible': [('calcular_valores', '=', False)]}"/>
+                                <field name="grupo_socioeconomico_id"  placeholder="Seleccionar grupo socioecómico" help="Seleccione el grupo socio económico que fue asignado por bienestar estudiantil" attrs="{'invisible': [('calcular_valores', '=', False)]}"/>
                             </group>
                             <br></br>
                             <group>    
-                                <field name="costo_optimo_id" string="Régimen Académico" help="Seleccione el año más reciente en el que reprobó asignaturas" attrs="{'invisible': [('calcular_valores', '=', False)]}"/>
+                                <field name="costo_optimo_id" placeholder="Seleccionar régimen académico" string="Régimen Académico" help="Seleccione el año más reciente en el que reprobó asignaturas" attrs="{'invisible': [('calcular_valores', '=', False)]}"/>
                             </group>
                             <br></br>
                         <hr/>
@@ -36,7 +36,7 @@
                             <page string="Datos de Tercera Matrícula">
 
                             <group>
-                                <field name ="ciclo_materias_reprobadas_tercera" help="Seleccione los ciclos en los cuales tiene tercera matrícula" domain="[('carrera_id', '=', carrera_id)]"/>
+                                <field name ="ciclo_materias_reprobadas_tercera" placeholder="Seleccionar ciclo" help="Seleccione los ciclos en los cuales tiene tercera matrícula" domain="[('carrera_id', '=', carrera_id)]"/>
                             </group>
                                 <br></br>
 
@@ -46,11 +46,11 @@
                             </page>
                             <page string="Datos de Segunda Matrícula">
                             <group>
-                                <field name="ciclo_materias_reprobadas" help="Seleccione los ciclos en los cuales tiene segunda matrícula" domain="[('carrera_id', '=', carrera_id)]"/>
+                                <field name="ciclo_materias_reprobadas" placeholder="Seleccionar ciclo" help="Seleccione los ciclos en los cuales tiene segunda matrícula" domain="[('carrera_id', '=', carrera_id)]"/>
                             </group>
                                 <br></br>
                             <group>
-                                <field name="paralelo_ciclo_reprobar" help="Seleccione el paralelo en el cuál reprobó asignaturas" domain="[('ciclo_id', '=', ciclo_materias_reprobadas), ('periodo_id', '=', periodo_id)]"/>
+                                <field name="paralelo_ciclo_reprobar" placeholder="Seleccionar paralelo" help="Seleccione el paralelo en el cuál reprobó asignaturas" domain="[('ciclo_id', '=', ciclo_materias_reprobadas), ('periodo_id', '=', periodo_id)]"/>
                             </group>
                                 <br></br>
                             <group>
@@ -61,7 +61,7 @@
                             <page string="Datos de Primera Matrícula" help="Ingresar solo las asignaturas pendientes que tenga en su malla curricular">
 
                             <group>
-                                <field name ="ciclo_materias_pendientes" help="Seleccione los ciclos en los cuales tiene asignaturas pendientes" domain="[('carrera_id', '=', carrera_id)]" />
+                                <field name ="ciclo_materias_pendientes" placeholder="Seleccionar ciclo" help="Seleccione los ciclos en los cuales tiene asignaturas pendientes" domain="[('carrera_id', '=', carrera_id)]" />
                             </group>
                                 <br></br>
                             <group>
@@ -93,19 +93,19 @@
                                 <field name="ciclo_matricular" help="Ciclo en el que se puede matrícular" readonly="1" attrs="{'invisible':[('ocultar_resultados', '=', False)]}"/>
                             </group>
                             <group>
-                                <field name="asignaturas_tercera" help="Solo puede solicitar matrícula a esta asignatura por ser tercera matrícula" readonly="1" attrs="{'invisible':[('ocultar_resultados', '=', False)]}"/>
+                                <field name="asignaturas_tercera" string="Asignaturas de tercera matrícula a las que se puede matricular" help="Solo puede solicitar matrícula a esta asignatura por ser tercera matrícula" readonly="1" attrs="{'invisible':[('ocultar_resultados', '=', False)]}"/>
                             </group>
                             <group>
-                                <field name="asignaturas_segunda" help="Asignaturas a las que puede solicitar segunda matrícula" readonly="1" attrs="{'invisible':[('ocultar_resultados', '=', False)]}"/>
+                                <field name="asignaturas_segunda" string="Asignaturas de segunda matrícula a las que se puede matricular" help="Asignaturas a las que puede solicitar segunda matrícula" readonly="1" attrs="{'invisible':[('ocultar_resultados', '=', False)]}"/>
                             </group>
                             <group>
-                                <field name="asignaturas_primera" help="Asignaturas pendientes a las que puede solicitar matrícula" readonly="1" attrs="{'invisible':[('ocultar_resultados', '=', False)]}"/>
+                                <field name="asignaturas_primera" string="Asignaturas pendientes a las que se puede matricular" help="Asignaturas pendientes a las que puede solicitar matrícula" readonly="1" attrs="{'invisible':[('ocultar_resultados', '=', False)]}"/>
                             </group>
                             <group>
                                 <field name="valores_pagar" string="Valores aproximados a pagar" help="Valor estimado a pagar por pérdida de gratuidad" readonly="1" attrs="{'invisible':[('ocultar_resultados', '=', False)]}"/>
                             </group>
                             <group>
-                            <field name="materias_horario_choque" string="Materias que se cruzan los  horarios" readonly="1" attrs="{'invisible':[('ocultar_resultados', '=', False)]}"/>
+                            <field name="materias_horario_choque" string="Asignaturas que se cruzan los  horarios" help="Asignaturas que se cruzan los horarios por ser de diferentes ciclos" readonly="1" attrs="{'invisible':[('ocultar_resultados', '=', False)]}"/>
 
                             </group>
                             <group>

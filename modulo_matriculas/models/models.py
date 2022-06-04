@@ -606,7 +606,6 @@ class Matricula(models.Model):
                         suma_creditos = suma_creditos - creditos_asig[aux]
                         materias_si.pop(aux)
                         creditos_asig.pop(aux)
-
                         print(materias_si)
                         print(creditos_asig)
 
@@ -767,20 +766,32 @@ class Matricula(models.Model):
         arancel = arancel/100
         matricula = self.grupo_socioeconomico_id.matricula
         matricula = matricula/100
-        pa = n_horas/n_ciclos
-        aux_tercera = total_creditos_tercera * 2
+        aux_tercera = total_creditos_tercera
+        print("valores--------------------------------")
         factorA = aux_tercera + total_creditos_segunda
-        factorB = pa
+        print(factorA)
+        factorB = (n_horas/n_ciclos)*2
+        print(factorB)
         factorC = costo_optimo_anual
+        print(factorC)
         factorD = factorC/factorB
+        print(factorD)
         factorE = factorD*factorA
+        print(factorE)
         factorF = arancel
+        print(factorF)
         factorG = factorE * factorF
+        print(factorG)
         factorH = factorB/2
+        print(factorH)
         factorI = factorD * factorH
+        print(factorI)
         factorJ = matricula
+        print(factorJ)
         factorK = factorI*factorJ
+        print(factorK)
         valor = factorG + factorK
+        print(valor)
         valor = round(valor,2)
 
         return valor
@@ -1250,7 +1261,6 @@ class Paralelo(models.Model):
                                default=lambda self: self._origin.id,
                                ondelete="cascade")
 
-
 class Horario(models.Model):
     _name = "ma.horario"
     _description = " Horario"
@@ -1284,46 +1294,5 @@ class Horario(models.Model):
     ciclo_id = fields.Many2one("ma.ciclo", string="Ciclo",
                                ondelete="cascade")
 
-
-
-
 class ResUser(models.Model):
     _inherit = "res.users"
-
-    @api.constrains('vat')
-    def _validarCedula(self):
-
-        try:
-            nocero = self.vat.strip("0")
-            cedula = int(nocero, 0)
-        except:
-            raise ValidationError("Verifique el número de cédula")
-        # sin ceros a la izquierda
-
-        verificador = cedula % 10
-        numero = cedula // 10
-
-        # mientras tenga números
-        suma = 0
-        while (numero > 0):
-
-            # posición impar
-            posimpar = numero % 10
-            numero = numero // 10
-            posimpar = 2 * posimpar
-            if (posimpar > 9):
-                posimpar = posimpar - 9
-
-            # posición par
-            pospar = numero % 10
-            numero = numero // 10
-
-            suma = suma + posimpar + pospar
-
-        decenasup = suma // 10 + 1
-        calculado = decenasup * 10 - suma
-        if (calculado >= 10):
-            calculado = calculado - 10
-
-        if (calculado != verificador):
-            raise ValidationError("Verifique el número de cédula")
