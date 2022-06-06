@@ -761,6 +761,10 @@ class Matricula(models.Model):
 
         n_horas = self.carrera_id.duracion_horas
         n_ciclos = self.carrera_id.numero_ciclos
+        if "Ciencias" in self.carrera_id.name:
+            n_ciclos = n_ciclos-1
+            print(n_ciclos)
+            print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
         costo_optimo_anual = self.costo_optimo_id.valor
         arancel = self.grupo_socioeconomico_id.arancel
         arancel = arancel/100
