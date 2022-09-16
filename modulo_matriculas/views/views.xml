@@ -338,6 +338,8 @@
                     <field name="name"/>
                     <field name="ciclo_id"/>
                     <field name="carrera_id"/>
+                    <field name="periodo_id"/>
+
                 </tree>
             </field>
         </record>
@@ -507,6 +509,20 @@
         </record>
 
         <!--Accion de ventana Paralelo-->
+        <record id="action_view_paralelo_A" model="ir.actions.act_window">
+            <field name="name">Mis Paralelos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ma.paralelo</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="domain">[('periodo_id.estado', '=', True)]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    El administrador debe asignar sus paralelos.
+                </p>
+            </field>
+        </record>
+
+        <!--Accion de ventana Paralelo-->
         <record id="action_view_grupo" model="ir.actions.act_window">
             <field name="name">Grupo Socioeconómico</field>
             <field name="type">ir.actions.act_window</field>
@@ -542,12 +558,22 @@
             <field name="act_window_id" ref="action_view_paralelo"/>
         </record>
 
+
+
         <!--Accion de ventana Tree Paralelo-->
         <record id="action_view_paralelo_tree" model="ir.actions.act_window.view">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="modulo_matriculas.view_tree_paralelo"/>
             <field name="act_window_id" ref="action_view_paralelo"/>
+        </record>
+
+        <!--Accion de ventana Tree Paralelo_A-->
+        <record id="action_view_paralelo_tree_A" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="modulo_matriculas.view_tree_paralelo"/>
+            <field name="act_window_id" ref="action_view_paralelo_A"/>
         </record>
 
         <!--Accion de ventana Horario-->
@@ -677,7 +703,7 @@
                   name="Horarios"
                   groups = "modulo_matriculas.res_groups_alumnos"
                   parent="modulo_matriculas.menu_main_matricula_app_Alumno"
-                  action="modulo_matriculas.action_view_paralelo"/>/>
+                  action="modulo_matriculas.action_view_paralelo_A"/>/>
 
         <menuitem id="menu_datos_datos_carrera"
                   name="Datos Carrera"

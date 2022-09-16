@@ -1111,6 +1111,14 @@ class Matricula(models.Model):
         else:
             self.validar_matricula_1_2 = False
 
+    @api.onchange('asignaturas_primera')
+    def quitar_comas(self):
+        asignaturas = self.asignaturas_primera
+        texto_sin_comas = asignaturas.replace(",,", ",")
+        mensaje = texto_sin_comas.replace(",,", " ")
+        mensaje = mensaje[1:]
+        mensaje = mensaje[:-1]
+        self.asignaturas_primera = mensaje
 
 
 
