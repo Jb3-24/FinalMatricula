@@ -1,5 +1,6 @@
 import datetime
 import re
+from xml.dom import ValidationErr
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
 
@@ -183,7 +184,7 @@ class Matricula(models.Model):
         # ciclo siguiente
         nuevo_ciclo_matricular = ciclo_mayor - 2
         nuevo_ciclo_matricularA = "ciclo_" + str(nuevo_ciclo_matricular)
-        print(nuevo_ciclo_matricular)
+        
         ciclo_siguiente2 = self.env['ma.ciclo'].search(
             [('numero_ciclo', '=', nuevo_ciclo_matricularA), ('carrera_id', '=', carrera_id_ma)], limit=1)
 
@@ -192,14 +193,13 @@ class Matricula(models.Model):
 
         n_asignaturas = ciclo.n_asignaturas
         n_asignaturas = round(n_asignaturas * 0.40)
-        print(n_asignaturas)
+        
         c = 0
         s_aux_prerre = []
         s = ""
         materias_mismo_ciclo =""
         diferentes_ciclo = False
 
-        print("PRERREQUISITOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
         for i in range(len(asig_segunda_aux_ordenada_des)):
             #if asig_segunda_aux_ordenada_des[i][0] != "":
             asignatura_validar = self.env['ma.asignatura'].search(
@@ -209,39 +209,27 @@ class Matricula(models.Model):
                     if prerre.id == asig_segunda_aux_ordenada_des[j][4]:
                         s_aux_prerre.append(asig_segunda_aux_ordenada_des[i][2])
 
-        print("_a______________a________________-a___________")
-        print(s_aux_prerre)
         aux_metodo = ""
 
         auxiliar = ""
         for i in range(len(asig_segunda_aux)):
-            print("Vueltaaaaaaaaaaaaaaa" + str(i))
+            
             aux_metodo = aux_metodo + self.verificar_horario(ciclo.id, asig_segunda_aux[i][4]) + ","
             auxiliar = aux_metodo + self.verificar_horario(ciclo.id, asig_segunda_aux[i][4]) + ","
-            print("111111111111111111111111111111111")
-            print(self.verificar_horario(ciclo.id, asig_segunda_aux[i][4]))
-            print(len(contC))
+            
             if len(contC) > 1:
-                print(asig_segunda_aux_ordenada[i][2])
-                print("Entra")
+                
                 if not(asig_segunda_aux[i][3] in auxiliar):
                     aux_metodo = aux_metodo + self.verificar_horario_bajo(ciclo_anterior2.id, asig_segunda_aux[i][4], ciclo_siguiente2.id) + ","
-                    print("222222222222222222222222222222222222")
-                    print(self.verificar_horario(ciclo_anterior2.id, asig_segunda_aux[i][4]))
+                   
                     aux_metodo = aux_metodo + self.verificar_horario_bajo(ciclo.id, asig_segunda_aux[i][4], ciclo_siguiente2.id) + ","
-                    print("333333333333333333333333333333333")
-                    print(self.verificar_horario_bajo(ciclo_siguiente2.id, asig_segunda_aux[i][4], asig_segunda_aux[i][3]))
-            print(aux_metodo)
+                         
         aux_metodo = aux_metodo.replace(",,", ",")
         aux_seperar = aux_metodo.split(',')
 
-        print("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM")
-        print(aux_metodo)
         for a in aux_seperar:
             if not (a == ',') or not(a ==''):
                 s_aux_prerre.append(str(a))
-        print("_Das___________________________Da_________________Dass")
-        print(s_aux_prerre)
 
         for i in range(len(asig_segunda_aux_ordenada_des)):
             if asig_segunda_aux_ordenada_des[i][0] != ciclo_mayor:
@@ -527,6 +515,7 @@ class Matricula(models.Model):
                 aux_materias_eliminar2 = self.verificar_horario_uni(ciclo_anterior2.id, asig_primera_aux[0][4],asig_segunda_aux[0][4])
                 print(aux_materias_eliminar2)
                 primera_puede = ""
+                materia_choca = ""
                 if aux_materias_eliminar2 != "":
                     print("WOoooooooooooooooooooooooooooooooo")
                     print(aux_materias_eliminar2)
@@ -542,12 +531,6 @@ class Matricula(models.Model):
 
                     name_asig = name_asig + aux_materias_eliminar2
                     primera_puede = asig_primera_aux[0][2]
-
-                print(asig_primera_aux[0][4])
-                print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-                print(ciclo_siguiente2.id)
-                print(asig_primera_aux[0][4])
-                print(asig_primera_aux[0][3])
                 aux_materias_eliminar3 = self.verificar_horario_bajo(ciclo_siguiente2.id, asig_primera_aux[0][4], asig_primera_aux[0][3])
                 print("Eloooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo")
                 print(aux_materias_eliminar3)
@@ -803,6 +786,7 @@ class Matricula(models.Model):
         valor = round(valor,2)
 
         return valor
+    
     def verificar_horario(self, id_ciclo_matricular, reprobadas_id):
 
         error_horario = []
@@ -959,7 +943,7 @@ class Matricula(models.Model):
             resultantList = ""
 
             for element in error_horario:
-                if element not in resultantList:
+                if not  str(element) in resultantList:
                     resultantList = resultantList + "," + str(element)
         print(resultantList)
         return resultantList
@@ -967,33 +951,14 @@ class Matricula(models.Model):
     def verificar_horario_uni(self, id_ciclo_matricular, reprobadas_id, primera_id):
 
         error_horario = []
-
-
-
-        print("INICIA HORARIO")
-        print(id_ciclo_matricular)
-        print(reprobadas_id)
-        print(primera_id)
-
-
         paralelo_anterior = self.paralelo_ciclo_reprobar
-        print(paralelo_anterior.ciclo_id.id)
-
-
-
         paralelo_matricular = self.env['ma.paralelo'].search(
             [('name', '=', paralelo_anterior.name), ('ciclo_id', '=', id_ciclo_matricular), ('periodo_id.estado', '=', True)])
-
 
         if paralelo_matricular.name == False:
             paralelo_matricular = self.env['ma.paralelo'].search(
                 [('ciclo_id', '=', id_ciclo_matricular), ('periodo_id.estado', '=', True) ], limit=1)
 
-
-        print("ECTRA 0")
-        print(paralelo_anterior)
-        print(paralelo_matricular)
-        print("LUES")
         for pa_lunes in paralelo_anterior.horario_lunes:
             print("Extra")
             print(pa_lunes.asignatura_id.name)
@@ -1084,7 +1049,7 @@ class Matricula(models.Model):
             resultantList = ""
             for element in error_horario:
                 print(element)
-                if element not in resultantList:
+                if not element in resultantList:
                     resultantList = resultantList + "," + str(element)
         print("LIustaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
         print(resultantList)
@@ -1111,16 +1076,6 @@ class Matricula(models.Model):
         else:
             self.validar_matricula_1_2 = False
 
-    @api.onchange('asignaturas_primera')
-    def quitar_comas(self):
-        asignaturas = self.asignaturas_primera
-        texto_sin_comas = asignaturas.replace(",,", ",")
-        mensaje = texto_sin_comas.replace(",,", " ")
-        mensaje = mensaje[1:]
-        mensaje = mensaje[:-1]
-        self.asignaturas_primera = mensaje
-
-
 
 class Asignatura(models.Model):
     _name = "ma.asignatura"
@@ -1142,6 +1097,17 @@ class Asignatura(models.Model):
     )
 
     matricula_id = fields.Many2one("ma.matricula", string="Matricula", ondelete="cascade")
+
+    @api.onchange('asignaturas_primera')
+    def quitar_comas(self):
+        asignaturas = self.asignaturas_primera
+        texto_sin_comas = asignaturas.replace(",,", ",")
+        mensaje = texto_sin_comas.replace(",,", " ")
+        mensaje = mensaje[1:]
+        mensaje = mensaje[:-1]
+        self.asignaturas_primera = mensaje
+        raise ValidationError(
+                "Entra al onchange")
 
     @api.model
     def create(self, vals):

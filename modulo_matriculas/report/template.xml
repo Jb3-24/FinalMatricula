@@ -79,11 +79,6 @@
                                 <br/>
                             </div>
                         </div>
-                         <div class="page"/>
-                             <t t-if="obj.materias_horario_choque">
-                                 No puedes tomar las siguientes asignaturas por cruce de horario: <span t-field="obj.materias_horario_choque"/><br/>
-                             </t>
-
                     </t>
                 </t>
             </t>
