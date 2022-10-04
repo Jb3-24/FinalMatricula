@@ -2,8 +2,6 @@
     <data>
 
         <!--Vista Form Matricula Alumno-->
-
-
         <record id="view_form_matricula" model="ir.ui.view">
             <field name="name">view.form.ma.matricula</field>
             <field name="model">ma.matricula</field>

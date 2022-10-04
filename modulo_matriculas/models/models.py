@@ -1,4 +1,5 @@
 import datetime
+from email.policy import default
 import re
 from xml.dom import ValidationErr
 from odoo import fields, models, api
@@ -33,7 +34,7 @@ class Matricula(models.Model):
     _name = "ma.matricula"
     _description = "Matricula"
 
-    decano = fields.Char(string="Nombre del Decano", default="Dr. Jorky Roosevelt Armijos Tituana Mgs.")
+    decano = fields.Char(string="Nombre del Decano", default="Ing. Julio Eduardo Romero Sigcho Mgs.")
     name = fields.Char(string="Nombre", required=True)
     cedula_alumno = fields.Char(string="Cédula", required=True)
 
@@ -266,8 +267,7 @@ class Matricula(models.Model):
         if diferentes_ciclo:
             ciclos_agregar = []
             materias = s.split(sep=',')
-            print("##############################################################################3")
-            print(materias)
+            
             for m in materias:
                 print(m)
                 aux_asig = m.strip()
@@ -746,6 +746,12 @@ class Matricula(models.Model):
 
         self.valores_pagar = valor
 
+        aux_quitar = self.asignaturas_primera
+        texto_sin_comas = aux_quitar.replace(",,", ",")
+        mensaje = texto_sin_comas.replace(",,", " ")
+        mensaje = mensaje[:-1]
+        self.asignaturas_primera = mensaje
+
 
     def calcularValores(self, total_creditos_tercera, total_creditos_segunda):
         valor = 0
@@ -1076,7 +1082,6 @@ class Matricula(models.Model):
         else:
             self.validar_matricula_1_2 = False
 
-
 class Asignatura(models.Model):
     _name = "ma.asignatura"
     _description = "Asignaturas"
@@ -1097,17 +1102,6 @@ class Asignatura(models.Model):
     )
 
     matricula_id = fields.Many2one("ma.matricula", string="Matricula", ondelete="cascade")
-
-    @api.onchange('asignaturas_primera')
-    def quitar_comas(self):
-        asignaturas = self.asignaturas_primera
-        texto_sin_comas = asignaturas.replace(",,", ",")
-        mensaje = texto_sin_comas.replace(",,", " ")
-        mensaje = mensaje[1:]
-        mensaje = mensaje[:-1]
-        self.asignaturas_primera = mensaje
-        raise ValidationError(
-                "Entra al onchange")
 
     @api.model
     def create(self, vals):
@@ -1250,7 +1244,8 @@ class Horario(models.Model):
     numero_hora = fields.Selection(
         selection=[("1", "1ra"), ("2", "2da"), ("3", "3ra"),
                    ("4", "4ta"), ("5", "5ta"), ("6", "6ta"),
-                   ("7", "7ma"), ("8", "8va"), ("9", "9na"), ("10", "10ma")], string="Número de Hora", required=True)
+                   ("7", "7ma"), ("8", "8va"), ("9", "9na"),
+                   ("10", "10ma"),("11", "11va"), ("12", "12va")], string="Número de Hora", required=True)
 
     asignatura_id = fields.Many2one(
         "ma.asignatura", string="Asignatura")
