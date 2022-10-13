@@ -192,6 +192,17 @@
         <field name="perm_read" eval="1"/>
     </record>
 
+    <!--Accesos para el periodo matricula secretaria-->
+    <record id="model_access_secretaria_matricula" model="ir.model.access">
+        <field name="name">model.access.ma.matricula_se</field>
+        <field name="model_id" ref="modulo_matriculas.model_ma_matricula"/>
+        <field name="group_id" ref="modulo_matriculas.res_groups_secretaria"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
     <!--Accesos para el periodo matricula alumno-->
     <record id="model_access_administrador_matricula_alumno" model="ir.model.access">
         <field name="name">model.access.ma.matricula</field>

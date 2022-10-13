@@ -17,4 +17,9 @@
         <field name="name">Alumnos</field>
         <field name="category_id" ref="modulo_matriculas.module_modulo_matricula"/>
     </record>
+
+    <record id="res_groups_secretaria" model="res.groups">
+        <field name="name">Secretaria</field>
+        <field name="category_id" ref="modulo_matriculas.module_modulo_matricula"/>
+    </record>
 </odoo>

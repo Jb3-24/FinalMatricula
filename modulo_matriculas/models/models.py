@@ -101,6 +101,9 @@ class Matricula(models.Model):
 
     ocultar_resultados = fields.Boolean(string="Ocultar Resultados", default=False)
 
+    solicitud_aprobado = fields.Boolean(string="Solicitud Aprobada", default=False)
+
+    solicitud_rechazada = fields.Boolean(string="Solicitud Rechazada", default=False)
 
     def eliminar_matriculas_diarias(self):
         matriculas = self.env["ma.matricula"].search([])
@@ -902,6 +905,11 @@ class Matricula(models.Model):
         print("Entra")
         asig_primera_aux = []
         for asig_primera in self.asignaturas_pendientes:
+            for asig_reprobadas in self.asignaturas_reprobadas:
+                if asig_primera.id == asig_reprobadas.id:
+                    raise ValidationError("Usted no puede seleccionar las mismas asignaturas")
+
+        for asig_primera in self.asignaturas_pendientes:
             aux = [int(s) for s in re.findall(r'-?\d\d*', str(asig_primera.ciclo_id.name))]
             aux1 = int(aux[0])
             dato2 = [aux1, str(asig_primera.ciclo_id.name), str(asig_primera.name), str(asig_primera.ciclo_id.id)]
@@ -916,6 +924,26 @@ class Matricula(models.Model):
                 self.validar_matricula_1_2 = False
         else:
             self.validar_matricula_1_2 = False
+
+    def aprobar_solicitud(self):
+        self.solicitud_aprobado = True
+
+    def rechazar_solicitud(self):
+        self.solicitud_rechazada = True
+        error = False
+        try:
+            template_rec = self.env.ref('modulo_matriculas.email_template_notificar_solicitud_rechazada')
+            template_rec.write({'email_to': self.user_id.email})
+            template_rec.send_mail(self.id, force_send=True)
+        except:
+            error = True
+
+        if error==True:
+            self.env.user.notify_danger(message='Se produjo un error al enviar la Notificación al correo electrónico')
+
+
+
+
 
 class Asignatura(models.Model):
     _name = "ma.asignatura"
