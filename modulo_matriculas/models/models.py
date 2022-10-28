@@ -32,7 +32,7 @@ class Matricula(models.Model):
     _name = "ma.matricula"
     _description = "Matricula"
     decano = fields.Char(string="Nombre del Decano", default="Ing. Julio Eduardo Romero Sigcho Mgs.")
-    name = fields.Char(string="Nombre", required=True)
+    name = fields.Char(string="Nombre", required=True, default=lambda self: self.env['res.users'].search([('id', '=', self.env.uid)], limit=1).name)
     cedula_alumno = fields.Char(string="Cédula", required=True)
 
     user_id = fields.Many2one(
@@ -104,6 +104,8 @@ class Matricula(models.Model):
     solicitud_aprobado = fields.Boolean(string="Solicitud Aprobada", default=False)
 
     solicitud_rechazada = fields.Boolean(string="Solicitud Rechazada", default=False)
+
+    asig_tercera_bool = fields.Boolean(string="¿Tiene asignatuas de tercera matrícula?", default=False)
 
     def eliminar_matriculas_diarias(self):
         matriculas = self.env["ma.matricula"].search([])

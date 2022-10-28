@@ -8,10 +8,12 @@
             <field name="arch" type="xml">
                 <form  create="false">
                     <sheet>
+                        <notebook>
+                        <page string="Datos Personales">
                             <group>
                                 <field name ="decano" groups="modulo_matriculas.res_groups_administrador"/>
-                                <field name ="name" placeholder="Ingresar nombres completos"/>
-                                <field name ="cedula_alumno" placeholder="Ingresar nro. de cédula"/>
+                                <field name ="name"/>
+                                <field name ="cedula_alumno"/>
                                 <field name ="periodo_id" domain="[('estado', '=', True)]"/>
                                 <field name="carrera_id"/>
                             </group>
@@ -29,20 +31,24 @@
                                 <field name="costo_optimo_id" placeholder="Seleccionar régimen académico" string="Régimen Académico" help="Seleccione el año más reciente en el que reprobó asignaturas" attrs="{'invisible': [('calcular_valores', '=', False)]}"/>
                             </group>
                             <br></br>
-                        <hr/>
-                        <notebook>
-                            <page string="Datos de Tercera Matrícula">
+                        </page>
+
+                            <page string="Datos de Tercera Matrícula" attrs="{'invisible': ['|',('name', '=', ''), ('cedula_alumno', '=', '')]}">
+
+                                <group>
+                                    <field name="asig_tercera_bool"/>
+                                </group>
 
                             <group>
-                                <field name ="ciclo_materias_reprobadas_tercera" placeholder="Seleccionar ciclo" help="Seleccione los ciclos en los cuales tiene tercera matrícula" domain="[('carrera_id', '=', carrera_id)]"/>
+                                <field name ="ciclo_materias_reprobadas_tercera" placeholder="Seleccionar ciclo" help="Seleccione los ciclos en los cuales tiene tercera matrícula" domain="[('carrera_id', '=', carrera_id)]" attrs="{'invisible': [('asig_tercera_bool', '=', False)]}"/>
                             </group>
                                 <br></br>
 
                             <group>
-                                <field name="asignaturas_reprobadas_tercera" help="Seleccione todas las asignaturas en las que tiene tercera matrícula" domain="[('ciclo_id', '=', ciclo_materias_reprobadas_tercera)]"/>
+                                <field name="asignaturas_reprobadas_tercera" help="Seleccione todas las asignaturas en las que tiene tercera matrícula" domain="[('ciclo_id', '=', ciclo_materias_reprobadas_tercera)]" attrs="{'invisible': [('asig_tercera_bool', '=', False)]}"/>
                             </group>
                             </page>
-                            <page string="Datos de Segunda Matrícula">
+                            <page string="Datos de Segunda Matrícula" attrs="{'invisible': ['|','|','|',('asig_tercera_bool', '=', True), ('name', '=', ''), ('cedula_alumno', '=', '')]}">
                             <group>
                                 <field name="ciclo_materias_reprobadas" placeholder="Seleccionar ciclo" help="Seleccione los ciclos en los cuales tiene segunda matrícula" domain="[('carrera_id', '=', carrera_id)]"/>
                             </group>
@@ -56,7 +62,7 @@
                             </group>
 
                             </page>
-                            <page string="Datos de Primera Matrícula" help="Ingresar solo las asignaturas pendientes que tenga en su malla curricular">
+                            <page string="Datos de Primera Matrícula" help="Ingresar solo las asignaturas pendientes que tenga en su malla curricular" attrs="{'invisible': ['|','|','|',('asig_tercera_bool', '=', True), ('name', '=', ''), ('cedula_alumno', '=', '')]}">
 
                             <group>
                                 <field name ="ciclo_materias_pendientes" placeholder="Seleccionar ciclo" help="Seleccione los ciclos en los cuales tiene asignaturas pendientes" domain="[('carrera_id', '=', carrera_id)]" />
