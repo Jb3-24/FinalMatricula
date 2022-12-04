@@ -48,7 +48,7 @@
                                 <field name="asignaturas_reprobadas_tercera" help="Seleccione todas las asignaturas en las que tiene tercera matrícula" domain="[('ciclo_id', '=', ciclo_materias_reprobadas_tercera)]" attrs="{'invisible': [('asig_tercera_bool', '=', False)]}"/>
                             </group>
                             </page>
-                            <page string="Datos de Segunda Matrícula" attrs="{'invisible': ['|','|','|',('asig_tercera_bool', '=', True), ('name', '=', ''), ('cedula_alumno', '=', '')]}">
+                            <page string="Datos de Segunda Matrícula" attrs="{'invisible': ['|','|',('asig_tercera_bool', '=', True), ('name', '=', ''), ('cedula_alumno', '=', '')]}">
                             <group>
                                 <field name="ciclo_materias_reprobadas" placeholder="Seleccionar ciclo" help="Seleccione los ciclos en los cuales tiene segunda matrícula" domain="[('carrera_id', '=', carrera_id)]"/>
                             </group>
@@ -62,7 +62,7 @@
                             </group>
 
                             </page>
-                            <page string="Datos de Primera Matrícula" help="Ingresar solo las asignaturas pendientes que tenga en su malla curricular" attrs="{'invisible': ['|','|','|',('asig_tercera_bool', '=', True), ('name', '=', ''), ('cedula_alumno', '=', '')]}">
+                            <page string="Datos de Primera Matrícula" help="Ingresar solo las asignaturas pendientes que tenga en su malla curricular" attrs="{'invisible': ['|','|',('asig_tercera_bool', '=', True), ('name', '=', ''), ('cedula_alumno', '=', '')]}">
 
                             <group>
                                 <field name ="ciclo_materias_pendientes" placeholder="Seleccionar ciclo" help="Seleccione los ciclos en los cuales tiene asignaturas pendientes" domain="[('carrera_id', '=', carrera_id)]" />
@@ -708,14 +708,6 @@
             <field name="view_mode">form</field>
         </record>
 
-        <!--Accion de ventana Asignatura tree-->
-        <record id="action_view_solicitudes_tree_admin" model="ir.actions.act_window.view">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="modulo_matriculas.view_tree_solicitud_A"/>
-            <field name="act_window_id" ref="action_view_matricula_Admin"/>
-        </record>
-
         <!--Accion de ventana Matrícula Form-->
         <record id="action_view_matricula_Admin" model="ir.actions.act_window">
             <field name="name">Solicitudes</field>
@@ -729,7 +721,13 @@
             </field>
         </record>
 
-
+        <!--Accion de ventana Asignatura tree-->
+        <record id="action_view_solicitudes_tree_admin" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="modulo_matriculas.view_tree_solicitud_A"/>
+            <field name="act_window_id" ref="action_view_matricula_Admin"/>
+        </record>
 
         <!--Accion de ventana Matrícula Form-->
         <record id="action_view_matricula_secretaria" model="ir.actions.act_window">
