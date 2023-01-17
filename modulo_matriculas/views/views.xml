@@ -8,9 +8,7 @@
             <field name="arch" type="xml">
                 <form  create="false">
                     <sheet>
-                        <notebook>
-                        <page string="Datos Personales">
-                            <group>
+                    <group>
                                 <field name ="decano" groups="modulo_matriculas.res_groups_administrador"/>
                                 <field name ="name"/>
                                 <field name ="cedula_alumno"/>
@@ -31,24 +29,19 @@
                                 <field name="costo_optimo_id" placeholder="Seleccionar régimen académico" string="Régimen Académico" help="Seleccione el año más reciente en el que reprobó asignaturas" attrs="{'invisible': [('calcular_valores', '=', False)]}"/>
                             </group>
                             <br></br>
-                        </page>
-
+                        <notebook>
                             <page string="Datos de Tercera Matrícula" attrs="{'invisible': ['|',('name', '=', ''), ('cedula_alumno', '=', '')]}">
 
-                                <group>
-                                    <field name="asig_tercera_bool"/>
-                                </group>
-
                             <group>
-                                <field name ="ciclo_materias_reprobadas_tercera" placeholder="Seleccionar ciclo" help="Seleccione los ciclos en los cuales tiene tercera matrícula" domain="[('carrera_id', '=', carrera_id)]" attrs="{'invisible': [('asig_tercera_bool', '=', False)]}"/>
+                                <field name ="ciclo_materias_reprobadas_tercera" placeholder="Seleccionar ciclo" help="Seleccione los ciclos en los cuales tiene tercera matrícula" domain="[('carrera_id', '=', carrera_id)]"/>
                             </group>
                                 <br></br>
 
                             <group>
-                                <field name="asignaturas_reprobadas_tercera" help="Seleccione todas las asignaturas en las que tiene tercera matrícula" domain="[('ciclo_id', '=', ciclo_materias_reprobadas_tercera)]" attrs="{'invisible': [('asig_tercera_bool', '=', False)]}"/>
+                                <field name="asignaturas_reprobadas_tercera" help="Seleccione todas las asignaturas en las que tiene tercera matrícula" domain="[('ciclo_id', '=', ciclo_materias_reprobadas_tercera), ('id', 'not in', asignaturas_pendientes), ('id', 'not in', asignaturas_reprobadas), ('prerrequisitos', 'not in', asignaturas_pendientes), ('prerrequisitos', 'not in', asignaturas_reprobadas)]"/>
                             </group>
                             </page>
-                            <page string="Datos de Segunda Matrícula" attrs="{'invisible': ['|','|',('asig_tercera_bool', '=', True), ('name', '=', ''), ('cedula_alumno', '=', '')]}">
+                            <page string="Datos de Segunda Matrícula">
                             <group>
                                 <field name="ciclo_materias_reprobadas" placeholder="Seleccionar ciclo" help="Seleccione los ciclos en los cuales tiene segunda matrícula" domain="[('carrera_id', '=', carrera_id)]"/>
                             </group>
@@ -58,18 +51,18 @@
                             </group>
                                 <br></br>
                             <group>
-                                <field name="asignaturas_reprobadas" help="Seleccione todas las asignaturas en las que tiene segunda matrícula" domain="[('ciclo_id', '=', ciclo_materias_reprobadas)]"/>
+                                <field name="asignaturas_reprobadas" help="Seleccione todas las asignaturas en las que tiene segunda matrícula" domain="[('ciclo_id', '=', ciclo_materias_reprobadas), ('id', 'not in', asignaturas_pendientes), ('id', 'not in', asignaturas_reprobadas_tercera), ('prerrequisitos', 'not in', asignaturas_pendientes), ('prerrequisitos', 'not in', asignaturas_reprobadas_tercera)]"/>
                             </group>
 
                             </page>
-                            <page string="Datos de Primera Matrícula" help="Ingresar solo las asignaturas pendientes que tenga en su malla curricular" attrs="{'invisible': ['|','|',('asig_tercera_bool', '=', True), ('name', '=', ''), ('cedula_alumno', '=', '')]}">
+                            <page string="Datos de Primera Matrícula" help="Ingresar solo las asignaturas pendientes que tenga en su malla curricular">
 
                             <group>
                                 <field name ="ciclo_materias_pendientes" placeholder="Seleccionar ciclo" help="Seleccione los ciclos en los cuales tiene asignaturas pendientes" domain="[('carrera_id', '=', carrera_id)]" />
                             </group>
                                 <br></br>
                             <group>
-                                <field name="asignaturas_pendientes" help="Seleccione todas las asignaturas pendientes que tenga" domain="[('ciclo_id', '=', ciclo_materias_pendientes)]"/>
+                                <field name="asignaturas_pendientes" help="Seleccione todas las asignaturas pendientes que tenga" domain="[('ciclo_id', '=', ciclo_materias_pendientes), ('id', 'not in', asignaturas_reprobadas_tercera), ('id', 'not in', asignaturas_reprobadas), ('prerrequisitos', 'not in', asignaturas_reprobadas_tercera), ('prerrequisitos', 'not in', asignaturas_reprobadas)]"/>
                             </group>
                                 <br></br>
                             <group>
@@ -380,7 +373,7 @@
             <field name="name">view.tree.ma.soli</field>
             <field name="model">ma.matricula</field>
             <field name="arch" type="xml">
-                <tree create="false">
+                <tree create = "false">
                     <field name="user_id"/>
                     <field name="cedula_alumno"/>
                     <field name="solicitud_aprobado"/>
@@ -408,7 +401,7 @@
             <field name="name">view.tree.ma.soli</field>
             <field name="model">ma.matricula</field>
             <field name="arch" type="xml">
-                <tree create="false">
+                <tree create = "false">
                     <field name="user_id"/>
                     <field name="cedula_alumno"/>
                 </tree>

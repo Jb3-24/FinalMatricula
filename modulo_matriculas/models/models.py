@@ -5,15 +5,12 @@ from xml.dom import ValidationErr
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
 
-
 class Carrera(models.Model):
     _name = "ma.carrera"
     _description = "Carrera"
     name = fields.Char(string="Nombre de la Carrera", required=True)
     numero_ciclos = fields.Integer(string="Número de Ciclos", required=True)
     duracion_horas = fields.Integer(string="Duración en Horas", required=True)
-
-
 
 class GrupoSocioeconomico(models.Model):
     _name = "ma.grupo_socioeconomico"
@@ -274,7 +271,7 @@ class Matricula(models.Model):
         if self.asignaturas_reprobadas:
             self.ciclo_matricular = ciclo_mayor
 
-        #primera matricuala
+        #primera matricula
         asig_primera_aux_ordenada = sorted(asig_primera_aux, key=lambda x: x[0])
         asig_primera_aux_ordenada_des = sorted(asig_primera_aux, key=lambda x: x[0], reverse=True)
         ciclo_mayor1 = 0
@@ -942,10 +939,6 @@ class Matricula(models.Model):
 
         if error==True:
             self.env.user.notify_danger(message='Se produjo un error al enviar la Notificación al correo electrónico')
-
-
-
-
 
 class Asignatura(models.Model):
     _name = "ma.asignatura"
