@@ -36,6 +36,11 @@
                                 <field name ="ciclo_materias_reprobadas_tercera" placeholder="Seleccionar ciclo" help="Seleccione los ciclos en los cuales tiene tercera matrícula" domain="[('carrera_id', '=', carrera_id)]"/>
                             </group>
                                 <br></br>
+                            
+                            <group>
+                                <field name="paralelo_ciclo_reprobar_tercera" placeholder="Seleccionar paralelo" help="Seleccione el paralelo en el cuál reprobó asignaturas" domain="[('ciclo_id', '=', ciclo_materias_reprobadas_tercera), ('periodo_id', '=', periodo_id)]"/>
+                            </group>
+                                <br></br>
 
                             <group>
                                 <field name="asignaturas_reprobadas_tercera" help="Seleccione todas las asignaturas en las que tiene tercera matrícula" domain="[('ciclo_id', '=', ciclo_materias_reprobadas_tercera), ('id', 'not in', asignaturas_pendientes), ('id', 'not in', asignaturas_reprobadas), ('prerrequisitos', 'not in', asignaturas_pendientes), ('prerrequisitos', 'not in', asignaturas_reprobadas)]"/>
