@@ -16,10 +16,10 @@
                                 <p>De mis consideraciones:</p>
                                 <br/>
 
-                                <t t-if="obj.asignaturas_tercera != ''">
+                                <t t-if="obj.asignaturas_tercera != '' and obj.asignaturas_primera == '' and obj.asignaturas_segunda == ''">
                                     <p class="text-justify">Yo, <b><span t-field="obj.name"/></b>, con C.I: <b><span t-field="obj.cedula_alumno"/></b> me dirijo a usted de la forma más cordial
-                                    para solicitar <b>TERCERA MATRÍCULA</b> a las asignaturas: <b><span t-field="obj.asignaturas_tercera"/></b>
-                                    correspondiente al ciclo <b><span t-field="obj.ciclo_matricular"/></b> en el periodo <b><span t-field="obj.periodo_id.name"/></b>.</p>
+                                    para solicitar <b>Tercera Matrícula</b> a las asignatura/s: <b><span t-field="obj.asignaturas_tercera"/></b>
+                                    correspondiente/s al ciclo <b><span t-field="obj.ciclo_materias_reprobadas_tercera.name"/></b>, en el periodo <b><span t-field="obj.periodo_id.name"/></b>.</p>
                                     <br/>
                                     <p class="text-justify">Agradezco por la atención dada a la presente, deseando éxitos en sus labores cotidianas.</p>
 
@@ -31,10 +31,11 @@
                                         </p>
                                 </t>
 
-                                <t t-if="obj.asignaturas_segunda != '' and obj.asignaturas_primera != ''">
+                                <t t-if="obj.asignaturas_tercera != '' and obj.asignaturas_primera != '' and obj.asignaturas_segunda != ''">
                                     <p class="text-justify">Yo, <b><span t-field="obj.name"/></b>, con C.I: <b><span t-field="obj.cedula_alumno"/></b> me dirijo a usted de la forma más cordial
-                                    para solicitar <b>SEGUNDA MATRÍCULA</b> a las asignaturas: <b><span t-field="obj.asignaturas_segunda"/></b>
-                                    correspondiente al ciclo <b><span t-field="obj.ciclo_materias_reprobadas.name"/></b>, además solicito <b>PRIMERA MATRÍCULA</b> al ciclo <b><span t-field="obj.ciclo_matricular"/></b> en las asignaturas:
+                                    para solicitar <b>Tercera Matrícula</b> a las asignatura/s: <b><span t-field="obj.asignaturas_tercera"/></b>
+                                    correspondiente/s al ciclo <b><span t-field="obj.ciclo_materias_reprobadas_tercera.name"/></b>, además solicito <b>Segunda Matrícula</b> en las asignatura/s:
+                                    <b><span t-field="obj.asignaturas_segunda"/></b> y también solicito <b>Primera Matrícula</b> en las asignatura/s:
                                     <b><span t-field="obj.asignaturas_primera"/></b>, en el periodo <b><span t-field="obj.periodo_id.name"/></b>.</p>
                                     <br/>
                                     <p class="text-justify">Agradezco por la atención dada a la presente, deseando éxitos en sus labores cotidianas.</p>
@@ -46,10 +47,12 @@
                                         C.I:<span t-field="obj.cedula_alumno"/>
                                         </p>
                                 </t>
-                                <t t-if="obj.asignaturas_primera != '' and obj.asignaturas_segunda == ''">
+
+                                <t t-if="obj.asignaturas_tercera != '' and obj.asignaturas_segunda != '' and obj.asignaturas_primera == ''">
                                     <p class="text-justify">Yo, <b><span t-field="obj.name"/></b>, con C.I: <b><span t-field="obj.cedula_alumno"/></b> me dirijo a usted de la forma más cordial
-                                    para solicitar <b>PRIMERA MATRÍCULA</b> a las asignaturas: <b><span t-field="obj.asignaturas_primera"/></b>
-                                    correspondiente al ciclo <b><span t-field="obj.ciclo_matricular"/></b>, en el periodo <b><span t-field="obj.periodo_id.name"/></b>.</p>
+                                    para solicitar <b>Tercera Matrícula</b> a las asignatura/s: <b><span t-field="obj.asignaturas_tercera"/></b>
+                                    correspondiente/s al ciclo <b><span t-field="obj.ciclo_materias_reprobadas_tercera.name"/></b>, además solicito <b>Segunda Matrícula</b> en las asignatura/s:
+                                    <b><span t-field="obj.asignaturas_segunda"/></b> en el periodo <b><span t-field="obj.periodo_id.name"/></b>.</p>
                                     <br/>
                                     <p class="text-justify">Agradezco por la atención dada a la presente, deseando éxitos en sus labores cotidianas.</p>
 
@@ -61,11 +64,57 @@
                                         </p>
                                 </t>
 
-                                <t t-if="obj.asignaturas_primera == '' and obj.asignaturas_segunda != ''">
+                                <t t-if="obj.asignaturas_tercera != '' and obj.asignaturas_segunda == '' and obj.asignaturas_primera != ''">
+                                    <p class="text-justify">Yo, <b><span t-field="obj.name"/></b>, con C.I: <b><span t-field="obj.cedula_alumno"/></b> me dirijo a usted de la forma más cordial
+                                    para solicitar <b>Tercera Matrícula</b> a las asignatura/s: <b><span t-field="obj.asignaturas_tercera"/></b>
+                                    correspondiente/s al ciclo <b><span t-field="obj.ciclo_materias_reprobadas_tercera.name"/></b>, además solicito <b>Primera Matrícula</b> en las asignatura/s:
+                                    <b><span t-field="obj.asignaturas_primera"/></b> en el periodo <b><span t-field="obj.periodo_id.name"/></b>.</p>
+                                    <br/>
+                                    <p class="text-justify">Agradezco por la atención dada a la presente, deseando éxitos en sus labores cotidianas.</p>
+
+                                    <p class="text-center" ><br/><br/><br/><br/><br/>
+                                        f)________________________<br/>
+                                        <span t-field="obj.name"/><br/>
+                                        <span>Estudiante</span><br/>
+                                        C.I:<span t-field="obj.cedula_alumno"/>
+                                        </p>
+                                </t>
+
+                                <t t-if="obj.asignaturas_segunda != '' and obj.asignaturas_primera != '' and obj.asignaturas_tercera == ''">
+                                    <p class="text-justify">Yo, <b><span t-field="obj.name"/></b>, con C.I: <b><span t-field="obj.cedula_alumno"/></b> me dirijo a usted de la forma más cordial
+                                    para solicitar <b>Segunda Matrícula</b> a las asignatura/s: <b><span t-field="obj.asignaturas_segunda"/></b>
+                                    correspondiente/s al ciclo <b><span t-field="obj.ciclo_materias_reprobadas.name"/></b>, además solicito <b>Primera Matrícula</b> al ciclo <b><span t-field="obj.ciclo_matricular"/></b> en las asignatura/s:
+                                    <b><span t-field="obj.asignaturas_primera"/></b>, en el periodo <b><span t-field="obj.periodo_id.name"/></b>.</p>
+                                    <br/>
+                                    <p class="text-justify">Agradezco por la atención dada a la presente, deseando éxitos en sus labores cotidianas.</p>
+
+                                    <p class="text-center" ><br/><br/><br/><br/><br/>
+                                        f)________________________<br/>
+                                        <span t-field="obj.name"/><br/>
+                                        <span>Estudiante</span><br/>
+                                        C.I:<span t-field="obj.cedula_alumno"/>
+                                        </p>
+                                </t>
+                                <t t-if="obj.asignaturas_primera != '' and obj.asignaturas_segunda == '' and obj.asignaturas_tercera == ''">
+                                    <p class="text-justify">Yo, <b><span t-field="obj.name"/></b>, con C.I: <b><span t-field="obj.cedula_alumno"/></b> me dirijo a usted de la forma más cordial
+                                    para solicitar <b>Primera Matrícula</b> a las asignatura/s: <b><span t-field="obj.asignaturas_primera"/></b>
+                                    correspondiente/s al ciclo <b><span t-field="obj.ciclo_matricular"/></b>, en el periodo <b><span t-field="obj.periodo_id.name"/></b>.</p>
+                                    <br/>
+                                    <p class="text-justify">Agradezco por la atención dada a la presente, deseando éxitos en sus labores cotidianas.</p>
+
+                                    <p class="text-center" ><br/><br/><br/><br/><br/>
+                                        f)________________________<br/>
+                                        <span t-field="obj.name"/><br/>
+                                        <span>Estudiante</span><br/>
+                                        C.I:<span t-field="obj.cedula_alumno"/>
+                                        </p>
+                                </t>
+
+                                <t t-if="obj.asignaturas_primera == '' and obj.asignaturas_segunda != '' and obj.asignaturas_tercera == ''">
 
                                     <p class="text-justify">Yo, <b><span t-field="obj.name"/></b>, con C.I: <b><span t-field="obj.cedula_alumno"/></b> me dirijo a usted de la forma más cordial
-                                    para solicitar <b>SEGUNDA MATRÍCULA</b> a las asignaturas: <b><span t-field="obj.asignaturas_segunda"/></b>
-                                    correspondiente a los ciclos <b><span t-field="obj.ciclo_matricular_especial2"/></b> respectivamente, en el periodo <b><span t-field="obj.periodo_id.name"/></b>.</p>
+                                    para solicitar <b>Segunda Matrícula</b>  a las asignatura/s: <b><span t-field="obj.asignaturas_segunda"/></b>
+                                    correspondiente/s a los ciclos <b><span t-field="obj.ciclo_matricular_especial2"/></b> respectivamente, en el periodo <b><span t-field="obj.periodo_id.name"/></b>.</p>
                                     <br/>
                                     <p class="text-justify">Agradezco por la atención dada a la presente, deseando éxitos en sus labores cotidianas.</p>
 

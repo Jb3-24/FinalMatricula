@@ -633,7 +633,7 @@ class Matricula(models.Model):
                     self.asignaturas_primera = self.asignaturas_primera[:-1]
 
         #En tercera matrícula hay 1 asignatura y el resto de campos esta vacío.
-        if (len(asig_segunda_aux) == 1) or len(asig_primera_aux)==0 and len(asig_tercera_aux)==1:
+        if (len(asig_segunda_aux) >= 1) or len(asig_primera_aux)>=1 and len(asig_tercera_aux)==1:
             if self.matricular_mismo_ciclo == False:
                 asig_mayor_cred_3 = 0
                 asig_mayor_nombre_3 = ""
