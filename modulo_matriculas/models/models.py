@@ -767,22 +767,23 @@ class Matricula(models.Model):
             aux_list_horario = aux_reporte_horario.split(",")
             aux_list_horario1 = set(aux_list_horario)
 
+            if self.matricular_mismo_ciclo == True:
+                self.ciclo_matricular = self.ciclo_materias_pendientes.name
+            else:
+                self.ciclo_matricular = self.ciclo_matricular_especial.name
+
+            self.valores_pagar = ""
+            self.asignaturas_tercera = ""
+            self.asignaturas_segunda = ""
+            aux_quitar = self.asignaturas_primera
+            texto_sin_comas = aux_quitar.replace(",,", ",")
+            mensaje = texto_sin_comas.replace(",,", " ")
+            mensaje = mensaje[:-1]
+
         valor = ""
         if self.calcular_valores:
             valor = self.calcularValores(total_creditos_tercera, total_creditos_segunda)
-
-        if self.matricular_mismo_ciclo == True:
-            self.ciclo_matricular = self.ciclo_materias_pendientes.name
-        else:
-            self.ciclo_matricular = self.ciclo_matricular_especial.name
-
-        self.valores_pagar = ""
-        self.asignaturas_tercera = ""
-        self.asignaturas_segunda = ""
-        aux_quitar = self.asignaturas_primera
-        texto_sin_comas = aux_quitar.replace(",,", ",")
-        mensaje = texto_sin_comas.replace(",,", " ")
-        mensaje = mensaje[:-1]
+        self.valores_pagar = valor
 
     def calcularValores(self, total_creditos_tercera, total_creditos_segunda):
         valor = 0
